@@ -207,7 +207,8 @@ return Container(child:  TabBarView(
             children: [
                
                 Container(
-                 child: Center(child: Text('data'))
+                 child: Center(child:  CircularProgressIndicator(backgroundColor: Colors.green,)
+)
                ),
                Container(
                  child: Center(child: Text('data'))

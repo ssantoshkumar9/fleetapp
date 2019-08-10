@@ -52,7 +52,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   // Perform login or signup
   void _validateAndSubmit() async {
-  _showCircularProgress();
+ CircularProgressIndicator(backgroundColor: Colors.green,);
         print(_emailTextController.text,);
         print( _password);
         var body = {'username': _emailTextController.text, 'password': _passwordTextController.text,'grant_type':'password'};
@@ -78,7 +78,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
      }
      }else{
  
- 
+
      }
      
    
