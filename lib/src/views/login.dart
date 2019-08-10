@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:fleetly/src/login_api.dart';
 import 'package:fleetly/src/user_profile.dart';
+import 'package:fleetly/src/views/homepage.dart';
 import 'package:fleetly/src/views/login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -51,29 +52,15 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   // Perform login or signup
   void _validateAndSubmit() async {
-    // setState(() {
-    //   _errorMessage = "";
-    //   _isLoading = true;
-    // });
-    // if (_validateAndSave()) {
-    //   String userId = "";
-    //   try {
-        // if (_formMode == FormMode.LOGIN) {
-        //   userId = await widget.auth.signIn(_email, _password);
-        //   print('Signed in: $userId');
-        // } else {
-        //   userId = await widget.auth.signUp(_email, _password);
-        //   widget.auth.sendEmailVerification();
-        //   _showVerifyEmailSentDialog();
-        //   print('Signed up user: $userId');
-        // }
+  
         print(_emailTextController.text,);
         print( _password);
         var body = {'username': _emailTextController.text, 'password': _passwordTextController.text,'grant_type':'password'};
       Response res = await post('https://trackanyqa-webapi.azurewebsites.net/api/users/login?=',body: body);
       // await httpClient.post('https://trackany-qa.azurewebsites.net//api/users/login?=',body);
       print(res);
-      //final data = res.body;
+      if (res.statusCode == 200) {
+         //final data = res.body;
      final resourcesList = loginFromJson(res.body);
     print(resourcesList.accessToken);
       var accessToken = resourcesList.accessToken;
@@ -84,27 +71,16 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
        print(response.body);
      if (response.statusCode == 200) {
        print(response);
+ Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (BuildContext context) => new Homepage(str:accessToken)));
+
      }
      }
-        // setState(() {
-        //   _isLoading = false;
-        // });
+     }else{
 
-        // if (userId.length > 0 && userId != null && _formMode == FormMode.LOGIN) {
-        //   widget.onSignedIn();
-        // }
-
-    //   } catch (e) {
-    //     print('Error: $e');
-    //     setState(() {
-    //       _isLoading = false;
-    //       if (_isIos) {
-    //         _errorMessage = e.details;
-    //       } else
-    //         _errorMessage = e.message;
-    //     });
-    //   }
-    // }
+     }
+     
+   
   }
 
 
@@ -313,97 +289,3 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   }
 }
 
-
-// import 'package:flutter/material.dart';
-
-// class Login extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     final logo = Hero(
-//       tag: 'hero',
-//       child: Image(
-//         width: 150,
-//         height: 150,
-//         image: AssetImage('assets/lphh-logo.png'),
-//       ),
-//     );
-
-//     final email = TextFormField(
-//       keyboardType: TextInputType.emailAddress,
-//       autofocus: false,
-//       // initialValue: 'alucard@gmail.com',
-//       decoration: InputDecoration(
-//          fillColor: Colors.white,
-//       filled: true,
-//         hintText: 'Email',
-//         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-//         border: OutlineInputBorder(borderRadius: BorderRadius.circular(6.0)),
-      
-//       ),
-//       style: new TextStyle(
-//         height: 2.0,
-//       )
-//     );
-
-//     final password = TextFormField(
-//       autofocus: false,
-//       // initialValue: 'some password',
-//       obscureText: true,
-//       decoration: InputDecoration(
-//          fillColor: Colors.white,
-//       filled: true,
-//         hintText: 'Password',
-//         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-//         border: OutlineInputBorder(borderRadius: BorderRadius.circular(6.0)),
-//       ),
-//       style: new TextStyle(
-//         height: 2.0,
-//       ),
-//     );
-
-//     final loginButton = Padding(
-//       padding: EdgeInsets.symmetric(vertical: 16.0),
-//       child: RaisedButton(
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(6.0),
-//         ),
-//         onPressed: () {
-//           //  Navigator.of(context).push(new MaterialPageRoute(
-//           //             builder: (BuildContext context) => new VolunteerRetreatsListData(str:'participant', title : 'PARTICIPANT RETREAT DETAILS')));  
-//                 },
-//         padding: EdgeInsets.all(12),
-//         color: Colors.green,
-//         child: Text('SUBMIT', style: TextStyle(color: Colors.white,height: 2.0)),
-//       ),
-//     );
-
-
-//     return Scaffold(
-//       //backgroundColor: const Color(0xFFEC9BBC),
-//       appBar: AppBar(title: Text('Login',
-//           style: new TextStyle(
-//               fontSize: 18.0,
-//               fontWeight: FontWeight.bold,
-//               color: Colors.green),
-//         ),
-//         backgroundColor: Colors.white,),
-//       body: 
-//          Padding(
-//            padding: const EdgeInsets.only(top: 60.0),
-//            child: ListView(
-//             shrinkWrap: true,
-//             padding: EdgeInsets.only(left: 24.0, right: 24.0),
-//             children: <Widget>[
-//               logo,
-//               SizedBox(height: 20.0),
-//               email,
-//               SizedBox(height: 12.0),
-//               password,
-//               SizedBox(height: 15.0),
-//               loginButton,
-//             ],
-//         ),
-//          ),
-//     );
-//   }
-// }
