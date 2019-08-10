@@ -52,7 +52,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   // Perform login or signup
   void _validateAndSubmit() async {
-  
+  _showCircularProgress();
         print(_emailTextController.text,);
         print( _password);
         var body = {'username': _emailTextController.text, 'password': _passwordTextController.text,'grant_type':'password'};
@@ -77,7 +77,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
      }
      }
      }else{
-
+ 
+ 
      }
      
    
@@ -111,8 +112,9 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   Widget build(BuildContext context) {
     _isIos = Theme.of(context).platform == TargetPlatform.iOS;
     return new Scaffold(
+      
         appBar: new AppBar(
-          title: new Text('Flutter login demo'),
+          title: new Text('Flutter login'),
           backgroundColor: Colors.green,
         ),
         body: Stack(

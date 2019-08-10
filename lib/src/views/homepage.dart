@@ -72,7 +72,7 @@ class Homepage extends StatefulWidget {
       // var formatter = new DateFormat('yyyy-MM-dd');
 
       // String formattedReportedDate = formatter.format(reporteddate);
-      // print(formattedReportedDate);
+      // print(formattedReportedDate); 
          final eventsResponse = await getEventsData(widget.str,getDriversListResultData.deviceIdentifier,'2019-08-08',getDriversListResultData.email);  
        print(eventsResponse.body);
        final events = getEventsFromJson(eventsResponse.body);
@@ -80,134 +80,38 @@ class Homepage extends StatefulWidget {
        
      }
   }
-  Widget _getItemUI(BuildContext context, int index, String string) {
-    var projectName = getEventsList.events[index];
-    var clientName = "";
-   var projectDescription = "";
 
-  //  if (widget.getEventsList == null){
-  //    if (string == "Internal"){
-  //    projectName = getEventsList.events[index].displayname;
-  //    clientName = internalLList[index].clientName;
-  //    projectDescription = internalLList[index].descrption; 
-  //    }else{
-  //    projectName = externalList[index].projectName;
-  //    clientName = externalList[index].clientName;
-  //    projectDescription = externalList[index].descrption; 
-  //    }
-    
-
-  //  }else{
-  //   // projectName = widget.resultData[index].title;
-  //   //  clientName = widget.resultData[index].projectDescription;
-
-  //  }
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: new LinearGradient(
-              colors:[const Color(0xffFAFAFA), const Color(0xffEEEEEE)] ,
-              begin: const FractionalOffset(0.0, 0.0),
-              end: const FractionalOffset(0.6, 0.0),
-              stops: [0.0, 1.0],
-              tileMode: TileMode.clamp),
-          color: Colors.green,
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: new ListTile(
-          //trailing: Icon(Icons.navigate_next),
-          leading: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: new Container(
-                width: 40.0,
-                height: 40.0,
-                decoration: new BoxDecoration(
-                    borderRadius: new BorderRadius.circular(20.0),
-                    shape: BoxShape.rectangle,
-                    image: new DecorationImage(
-                        fit: BoxFit.fill,
-                        //image: new NetworkImage( "https://foresite.com/wp-content/uploads/2018/02/case-study.jpg")
-                        image: new AssetImage("assets/casestudy.png"),
-                        ))),
-          ),
-          title: Container(
-            padding: EdgeInsets.only(top: 8),
-            child: new Text(
-              projectName.evetId,
-              //style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.white),
-              style:
-                  new TextStyle(fontSize: 18.0, color: Colors.black),
-            ),
-          ),
-          // subtitle: new Column(
-          //     mainAxisAlignment: MainAxisAlignment.start,
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-              
-          //     children: <Widget>[
-          //       Padding(
-          //         padding: const EdgeInsets.all(4.0),
-          //         child: new Text(clientName,
-          //             style: new TextStyle(
-                        
-          //                 fontSize: 15.0,
-          //                 fontWeight: FontWeight.w100,
-          //                 color: CommonColors.midNightBlue,
-          //                 letterSpacing: 0.2,
-          //                 wordSpacing: 1)),
-          //       ),
-          //               new Text(projectDescription, maxLines: 3,   overflow: TextOverflow.ellipsis,
-          //           style: new TextStyle(
-          //               fontSize: 14.0,
-          //               fontWeight: FontWeight.w100,
-          //               color: CommonColors.blueShadeWhite,
-          //               letterSpacing: 0.2,
-          //               wordSpacing: 1)),
-          //     ]),
-      //     onTap: () {
-      //       if (widget.resultData == null){
-      //  //Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new PdfPageData(pdfUrl: totalList[index].details, title: totalList[index].title,)));
-
-      //       }else{
-      //  Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new PdfPageData(pdfUrl: widget.resultData[index].details, title: widget.resultData[index].title,)));
-
-      //       }
-
-      //     },
-        ),
-      ),
-    );
-  }
-  
 
   
   
   @override
   Widget build(BuildContext context) {
     _validateAndGetData();
+   
       return DefaultTabController(
          length: 2,
      child:Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         bottom: TabBar(
             indicatorColor: Colors.orange,
               tabs: [
-                Tab(text: 'External',),
-                Tab(text: 'Internal',),
+                Tab(text: 'Home',),
+                Tab(text: 'Events',),
               ],
             ), //backgroundColor: Color.fromRGBO(56, 66, 86, 1.0),
         backgroundColor: Colors.green,
         elevation: 0.0,
         
         title: Text(
-          'Projects',
+          'Home',
           style: TextStyle(fontSize: 24),
         ),
       ),
       body: SafeArea(
         
-        child: Container(child: showCaseStudyList()),
+        child: Container(child:  showCaseStudyList()),
       ),
     ),
     );
@@ -265,39 +169,55 @@ class Homepage extends StatefulWidget {
     // );
   }
    Widget showCaseStudyList() {
-
-return Container(
+//if (getEventsList.events.length > 0) {
+//  return Container(
    
-        child:  TabBarView(
+//         child:  TabBarView(
+//             children: [
+               
+//                 Container(
+//                  child: ListView.builder(
+//               shrinkWrap: true,
+//               itemCount: getEventsList.events.length,
+//               itemBuilder: (context, index) {
+//                   return _getItemUI(context, index, 'externalProjectType');
+//               },
+              
+//               // itemBuilder: _getItemUI,
+//             ),
+//                ),
+//                Container(
+//                  child: ListView.builder(
+//               shrinkWrap: true,
+//               itemCount: getEventsList.events.length,
+//               itemBuilder: (context, index) {
+//                   return _getItemUI(context, index, 'externalProjectType');
+//               },
+              
+//               // itemBuilder: _getItemUI,
+//             ),
+//                ),
+//               // Icon(Icons.directions_car),
+//               // Icon(Icons.directions_transit),
+//             ],
+//           ),
+// );
+// }else{
+return Container(child:  TabBarView(
             children: [
                
                 Container(
-                 child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: getEventsList.events.length,
-              itemBuilder: (context, index) {
-                  return _getItemUI(context, index, 'externalProjectType');
-              },
-              
-              // itemBuilder: _getItemUI,
-            ),
+                 child: Center(child: Text('data'))
                ),
                Container(
-                 child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: getEventsList.events.length,
-              itemBuilder: (context, index) {
-                  return _getItemUI(context, index, 'externalProjectType');
-              },
-              
-              // itemBuilder: _getItemUI,
-            ),
+                 child: Center(child: Text('data'))
                ),
               // Icon(Icons.directions_car),
               // Icon(Icons.directions_transit),
-            ],
-          ),
+            ],),
 );
+// }
+
                
    }
  }

@@ -392,7 +392,7 @@ class Media {
     });
 
     factory Media.fromJson(Map<String, dynamic> json) => new Media(
-        url: json["Url"],
+        url: json["Url"] == null ? null : json["Url"],
         blobUrl: json["BlobUrl"],
         channelId: json["ChannelId"],
         mediaType: json["MediaType"],
@@ -400,7 +400,7 @@ class Media {
     );
 
     Map<String, dynamic> toJson() => {
-        "Url": url,
+        "Url": url == null ? null : url,
         "BlobUrl": blobUrl,
         "ChannelId": channelId,
         "MediaType": mediaType,
