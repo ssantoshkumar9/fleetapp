@@ -4,6 +4,7 @@ import 'package:fleetly/src/models/getevents_model.dart';
 import 'package:fleetly/src/repositories/get_drivers_api_client.dart';
 import 'package:fleetly/src/repositories/get_drivers_repository.dart';
 import 'package:fleetly/src/user_profile.dart';
+import 'package:fleetly/src/views/webView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,8 +18,9 @@ class Homepage extends StatefulWidget {
       httpClient: http.Client(),
     ),
   );
-   Homepage({this.getDriversListResultData,this.str,this.getEventsList});
+   Homepage({this.getDriversListResultData,this.str,this.getEventsList, this.htmlText});
    String str;
+   String htmlText;
   GetDrivers getDriversListResultData;
   GetEvents getEventsList;
   @override
@@ -38,7 +40,7 @@ class Homepage extends StatefulWidget {
   TabController _controller ;
      String str;
   GetEvents getEventsList;
-
+String htmlText;
   void initState() {
     super.initState();
 
@@ -207,9 +209,7 @@ return Container(child:  TabBarView(
             children: [
                
                 Container(
-                 child: Center(child:  CircularProgressIndicator(backgroundColor: Colors.green,)
-)
-               ),
+                 child:FleetlyWebview(htmlText:widget.htmlText)),
                Container(
                  child: Center(child: Text('data'))
                ),

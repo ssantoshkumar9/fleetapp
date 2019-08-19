@@ -52,6 +52,10 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   // Perform login or signup
   void _validateAndSubmit() async {
+   
+ 
+
+    
  CircularProgressIndicator(backgroundColor: Colors.green,);
         print(_emailTextController.text,);
         print( _password);
@@ -71,8 +75,14 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
        print(response.body);
      if (response.statusCode == 200) {
        print(response);
+       // var token = 'K-4fZozwL5snw9j6tyoRfk3VwxT2MNydsIehwVFMVt73fFUMtfzxZtZvu6vU__ff2uccnw1-R0gqZHJiWgHtoGj76GOEsvT40UmAa3dW03RNQ49acbT0BRxxR8k-0x07Th3-4i-JnJLrtbOMnLk3vfgNgNwpRRBvn1U3Ec12Lq5JKSBoZny62lQA4-oVWdi9ymeAulVSMkZqKC8kbrtiQRBlOI_S8vrqJZGw2LFiT1gUANE2rMXtdhGTAQvRJl8bp2Hhd3um4jr0h64bB0unwzROC-Q3BiQkSP_FTgzxcePBxqzZpo8XdcXUJ_1zLHjEthWWpD64m-mvOWL2zaSEMDOlt1-Mu1NJ_SEv-DjdSCtMbq9ydKswHIgvl6c-9MBXxHdWB7sAGa_5pd1iJ9cPUgAex2LB4RKg96ES7m-zKj6-H-m9nCxxhOn1_uiD2_IsNdIx4zFkWasldh-5UDMNiqH7QhsmuRjYLhDzuIlvlCXz-AoBCMSp3_iA0joy1Px-';
+ final webResponse = await webViewData(accessToken);  
+       print(webResponse.body);
+     if (webResponse.statusCode == 200) {
+       print(webResponse..body);
+     }
  Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (BuildContext context) => new Homepage(str:accessToken)));
+                      builder: (BuildContext context) => new Homepage(str:accessToken, htmlText:webResponse.body)));
 
      }
      }
