@@ -20,8 +20,9 @@ Future<http.Response> userData(accessToken) async {
   //https://trackanyqa-webapi.azurewebsites.net/api/users/byUserName/
 
   final response = await http.get(
-    'https://trackany-qa.azurewebsites.net/',
-    headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},
+  
+    'https://trackany-qa.azurewebsites.net/Account/AccountLogin?token=$accessToken',
+   // headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},
   );
   print("Bearer $accessToken");
 
@@ -45,10 +46,11 @@ Future<http.Response> userData(accessToken) async {
   Future<http.Response> getEventsData(accessToken,deviceIdentifier,lastReportedTime,email) async {
   //https://trackanyqa-webapi.azurewebsites.net/api/users/byUserName/
 
-
-  final response = await http.get(
+    // final http.Response response =
+    // await http.post(Uri.encodeFull(url), body: activityData);
+  final response = await http.get(Uri.encodeFull('https://trackanyqa-webapi.azurewebsites.net/api/GetVehicleEventsList/$deviceIdentifier/2019-08-12/$email/')
    
-    'https://trackanyqa-webapi.azurewebsites.net/api/GetVehicleEventsList/$deviceIdentifier/2019-08-19/$email',
+    ,
     headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},
   );
   print("Bearer $accessToken");

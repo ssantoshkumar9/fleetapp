@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
        debugShowCheckedModeBanner: false,
 
-      title: 'Fleety Login',
+      title: 'Fleetly Login',
       theme: ThemeData(
         // This is the theme of your application.
         //
