@@ -1,16 +1,25 @@
 
     
 import 'dart:io';
-
+import 'package:intl/intl.dart';
 import 'package:fleetly/src/login_api.dart';
+import 'package:fleetly/src/models/getdriver_model.dart';
+import 'package:fleetly/src/models/getevents_model.dart';
+import 'package:fleetly/src/models/userdetails_model.dart';
 import 'package:fleetly/src/user_profile.dart';
 import 'package:fleetly/src/views/homepage.dart';
 import 'package:fleetly/src/views/login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:date_format/date_format.dart';
+
 //import 'package:flutter_login_demo/services/authentication.dart';
 
 class LoginSignUpPage extends StatefulWidget {
+     LoginSignUpPage({this.getDriversListResultData,this.eventsList});
+
+  GetDrivers getDriversListResultData;
+  GetEvents eventsList;
   //LoginSignUpPage({this.auth, this.onSignedIn});
 
   //final BaseAuth auth;
@@ -24,6 +33,10 @@ class LoginSignUpPage extends StatefulWidget {
 enum FormMode { LOGIN, SIGNUP }
 
 class _LoginSignUpPageState extends State<LoginSignUpPage> {
+  List userDataList;
+   BuildContext _context;
+GetDrivers getDriversListResultData;
+  GetEvents getEventsList;
  var httpClient = new HttpClient();
   final TextEditingController _emailTextController = TextEditingController();
     final TextEditingController _passwordTextController = TextEditingController();
@@ -52,11 +65,15 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   // Perform login or signup
   void _validateAndSubmit() async {
-   
- 
-
-    
- CircularProgressIndicator(backgroundColor: Colors.green,);
+   var userDetails;
+//  var token  = 'VIJXJg5xivRnFlifdcbkBFnE4AUCDzeK5z6ALF4pmdkuby-FYl5lWEwapGyYXOj93IBhbUPy2Fd-prnxAkE-iBWHWhWdfmQjHsUwlw1ZPsO0UErnhS20qKgbUVTNd1FKWPkUjsJNCJ_gIka5Kj7dIZ909K7SC02CZJdx4oPawk8UG5mpQJ4HpMM4hibjXL3ZGsDKpKh9Icwh85hw1qmAqFrPQfUmT1OrpMnWqz_UWz3X3sDPmJM3HL1MQlfBmICtD3FOifvxMmz-hqNYrXNSEcejgtZ_wtgr5zHBlmh1cL27haPe10y_5WvL1fQSh7jta9slvnC2MqsskNsAGt7JB50eN-E6mPZ4yME-6BOPPgd5lP4hTYLiABtmFN6I58xsqCgU_pYTrn-O25ZOZdkwF616E5uQp-HDirC3RHs5vPnRCSKoTfwKTQ2b9VnGzstjxNon5PGbZzGRJz9sTlALFbE5XuJu-pPnqbp2N4wqGSTAtSLr4wwyMYPNnUlKUnbH';
+// final webResponse = await webViewData(token);  
+//        print(webResponse.body);
+//      if (webResponse.statusCode == 200) {
+//        print(webResponse..body);
+//      }
+    // Navigator.of(context).push(new MaterialPageRoute(
+    //                   builder: (BuildContext context) => new Homepage(str:token, htmlText:webResponse.body)));
         print(_emailTextController.text,);
         print( _password);
         var body = {'username': _emailTextController.text, 'password': _passwordTextController.text,'grant_type':'password'};
@@ -74,31 +91,97 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
        final response = await userData(accessToken);  
        print(response.body);
      if (response.statusCode == 200) {
+       var userList = userDetailsFromJson(response.body);
+     userDetails = userList;
        print(response);
-       // var token = 'K-4fZozwL5snw9j6tyoRfk3VwxT2MNydsIehwVFMVt73fFUMtfzxZtZvu6vU__ff2uccnw1-R0gqZHJiWgHtoGj76GOEsvT40UmAa3dW03RNQ49acbT0BRxxR8k-0x07Th3-4i-JnJLrtbOMnLk3vfgNgNwpRRBvn1U3Ec12Lq5JKSBoZny62lQA4-oVWdi9ymeAulVSMkZqKC8kbrtiQRBlOI_S8vrqJZGw2LFiT1gUANE2rMXtdhGTAQvRJl8bp2Hhd3um4jr0h64bB0unwzROC-Q3BiQkSP_FTgzxcePBxqzZpo8XdcXUJ_1zLHjEthWWpD64m-mvOWL2zaSEMDOlt1-Mu1NJ_SEv-DjdSCtMbq9ydKswHIgvl6c-9MBXxHdWB7sAGa_5pd1iJ9cPUgAex2LB4RKg96ES7m-zKj6-H-m9nCxxhOn1_uiD2_IsNdIx4zFkWasldh-5UDMNiqH7QhsmuRjYLhDzuIlvlCXz-AoBCMSp3_iA0joy1Px-';
- final webResponse = await webViewData(accessToken);  
-       print(webResponse.body);
-     if (webResponse.statusCode == 200) {
-       print(webResponse..body);
-     }
- Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (BuildContext context) => new Homepage(str:accessToken, htmlText:webResponse.body)));
 
+
+      
+     final driverresponse = await getDriversData(accessToken);  
+       print(driverresponse.body);
+     if (driverresponse.statusCode == 200) {
+       print(driverresponse);
+       final resourcesList = getDriversFromJson(driverresponse.body);
+         getDriversListResultData = resourcesList;
+         print(getDriversListResultData.lastReportedTime);
+         DateFormat dateFormat = DateFormat("dd-MMM-yyyy HH:mm");
+         DateTime dateTime = dateFormat.parse(getDriversListResultData.lastReportedTime);
+         print(dateTime);
+
+  //        DateTime todayDate = DateTime.parse(getDriversListResultData.lastReportedTime);
+  // print(todayDate);
+  // print(formatDate(todayDate, [yyyy, '/', mm, '/', dd, ' ', hh, ':', nn, ':', ss, ' ', am]));
+
+      //    var newDateTimeObj2 = new DateFormat("dd/MM/yyyy HH:mm:ss").parse("10/02/2000 15:13:09");
+
+      //    DateTime reporteddate = DateTime.parse(getDriversListResultData.lastReportedTime);
+      // //var nowDate = new DateTime.now();
+      // var formatter = new DateFormat('yyyy-MM-dd');
+
+      // String formattedReportedDate = formatter.format(reporteddate);
+      // print(formattedReportedDate); 
+    // final http.Response response =
+    // await http.post(Uri.encodeFull(url), body: activityData);
+         final eventsResponse = await getEventsData(accessToken,getDriversListResultData.deviceIdentifier,'22019-08-12',getDriversListResultData.email);  
+       print(eventsResponse.body);
+       if (eventsResponse.statusCode == 200) {
+       print(eventsResponse);
+       final events = getEventsFromJson(eventsResponse.body);
+       getEventsList = events;
+       Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (BuildContext context) => new Homepage(str:accessToken,userData:userDetails, getDriversListResultData: getDriversListResultData,getEventsList :getEventsList)));
+
+       }
+       
+     }
+
+       // var token = 'K-4fZozwL5snw9j6tyoRfk3VwxT2MNydsIehwVFMVt73fFUMtfzxZtZvu6vU__ff2uccnw1-R0gqZHJiWgHtoGj76GOEsvT40UmAa3dW03RNQ49acbT0BRxxR8k-0x07Th3-4i-JnJLrtbOMnLk3vfgNgNwpRRBvn1U3Ec12Lq5JKSBoZny62lQA4-oVWdi9ymeAulVSMkZqKC8kbrtiQRBlOI_S8vrqJZGw2LFiT1gUANE2rMXtdhGTAQvRJl8bp2Hhd3um4jr0h64bB0unwzROC-Q3BiQkSP_FTgzxcePBxqzZpo8XdcXUJ_1zLHjEthWWpD64m-mvOWL2zaSEMDOlt1-Mu1NJ_SEv-DjdSCtMbq9ydKswHIgvl6c-9MBXxHdWB7sAGa_5pd1iJ9cPUgAex2LB4RKg96ES7m-zKj6-H-m9nCxxhOn1_uiD2_IsNdIx4zFkWasldh-5UDMNiqH7QhsmuRjYLhDzuIlvlCXz-AoBCMSp3_iA0joy1Px-';
+//  final webResponse = await webViewData(accessToken);  
+//        print(webResponse.body);
+//      if (webResponse.statusCode == 200) {
+//        print(webResponse..body);
+//      }
+//Navigator.of(context).push(new MaterialPageRoute(
+                  //    builder: (BuildContext context) => new Homepage(str:accessToken, htmlText:webResponse.body)));
+ 
      }
      }
      }else{
- 
+       if ((_emailTextController.text.isNotEmpty) && (_emailTextController.text.isNotEmpty) ) {
+         _showDialogAlert();
 
+       }
      }
      
    
   }
 
-
+void _showVerifyEmailSentDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+         _context = context;
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Verify your account"),
+          content: new Text("Link to verify account has been sent to your email"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Dismiss"),
+              onPressed: () {
+                _changeFormToLogin();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   @override
   void initState() {
     _errorMessage = "";
-    _isLoading = false;
+     _isLoading = false;
     super.initState();
   }
 
@@ -122,9 +205,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   Widget build(BuildContext context) {
     _isIos = Theme.of(context).platform == TargetPlatform.iOS;
     return new Scaffold(
-      
         appBar: new AppBar(
-          title: new Text('Flutter login'),
+          title: new Text('Fleetly login'),
           backgroundColor: Colors.green,
         ),
         body: Stack(
@@ -142,17 +224,18 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   }
 
-  void _showVerifyEmailSentDialog() {
+  void _showDialogAlert() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+         _context = context;
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Verify your account"),
-          content: new Text("Link to verify account has been sent to your email"),
+          title: Center(child: new Text("FLEETLY",style: TextStyle(color: Colors.green,fontSize: 18, fontWeight: FontWeight.bold),)),
+          content: new Text("Something went wrong, Please try again."),
           actions: <Widget>[
             new FlatButton(
-              child: new Text("Dismiss"),
+              child: new Text("OK"),
               onPressed: () {
                 _changeFormToLogin();
                 Navigator.of(context).pop();

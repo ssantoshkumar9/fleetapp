@@ -1,16 +1,19 @@
 import 'package:fleetly/src/blocs/getdriver_bloc.dart';
 import 'package:fleetly/src/models/getdriver_model.dart';
 import 'package:fleetly/src/models/getevents_model.dart';
+import 'package:fleetly/src/models/userdetails_model.dart';
 import 'package:fleetly/src/repositories/get_drivers_api_client.dart';
 import 'package:fleetly/src/repositories/get_drivers_repository.dart';
 import 'package:fleetly/src/user_profile.dart';
+import 'package:fleetly/src/views/profile.dart';
 import 'package:fleetly/src/views/webView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 class Homepage extends StatefulWidget {
    
  final GetDriversListRepository getDriversListRepository = GetDriversListRepository(
@@ -18,7 +21,9 @@ class Homepage extends StatefulWidget {
       httpClient: http.Client(),
     ),
   );
-   Homepage({this.getDriversListResultData,this.str,this.getEventsList, this.htmlText});
+   Homepage({this.userData,this.getDriversListResultData,this.str,this.getEventsList, this.htmlText});
+      UserDetails userData;
+      GetEvents eventsList;
    String str;
    String htmlText;
   GetDrivers getDriversListResultData;
@@ -31,8 +36,10 @@ class Homepage extends StatefulWidget {
 
 
  class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
+     List<UserDetails> userData;
   final List<MyTabs> _tabs = [new MyTabs(title: "Home"),
-  new MyTabs(title: "Events")
+  new MyTabs(title: "Events"),
+  new MyTabs(title: "Profile")
   ];
      GetDriversListBloc _getDriversListBloc;
   GetDrivers getDriversListResultData;
@@ -43,12 +50,12 @@ class Homepage extends StatefulWidget {
 String htmlText;
   void initState() {
     super.initState();
-
+   //_validateAndGetData();
    
     //  _getDriversListBloc = GetDriversListBloc(getDriversListRepository: widget.getDriversListRepository);
     //  _getDriversListBloc.dispatch(GetDriversListCount());
     //_showList();
-    _controller = new TabController(length: 2, vsync: this);
+    _controller = new TabController(length: 3, vsync: this);
     _myHandler = _tabs[0];
       new MyTabs(title: "Events");
 
@@ -75,10 +82,18 @@ String htmlText;
 
       // String formattedReportedDate = formatter.format(reporteddate);
       // print(formattedReportedDate); 
-         final eventsResponse = await getEventsData(widget.str,getDriversListResultData.deviceIdentifier,'2019-08-08',getDriversListResultData.email);  
+    // final http.Response response =
+    // await http.post(Uri.encodeFull(url), body: activityData);
+   
+  
+         final eventsResponse = await getEventsData(widget.str,getDriversListResultData.deviceIdentifier,'2019-08-12',getDriversListResultData.email);  
        print(eventsResponse.body);
+       if (eventsResponse.statusCode == 200) {
+       print(eventsResponse);
        final events = getEventsFromJson(eventsResponse.body);
        getEventsList = events;
+       showList();
+       }
        
      }
   }
@@ -88,10 +103,10 @@ String htmlText;
   
   @override
   Widget build(BuildContext context) {
-    _validateAndGetData();
+    //_validateAndGetData();
    
       return DefaultTabController(
-         length: 2,
+         length: 3,
      child:Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -101,6 +116,7 @@ String htmlText;
               tabs: [
                 Tab(text: 'Home',),
                 Tab(text: 'Events',),
+                Tab(text: 'Profile',),
               ],
             ), //backgroundColor: Color.fromRGBO(56, 66, 86, 1.0),
         backgroundColor: Colors.green,
@@ -113,111 +129,154 @@ String htmlText;
       ),
       body: SafeArea(
         
-        child: Container(child:  showCaseStudyList()),
+        child: Container(child:  showList()),
       ),
     ),
     );
-    // return  Scaffold(
-    //   appBar: AppBar(
-    //    bottom: PreferredSize(child: Container(color: Colors.green, height: 2,), preferredSize: Size.fromHeight(4.0)),        //backgroundColor: Color.fromRGBO(56, 66, 86, 1.0),
-
-    //     iconTheme: IconThemeData(
-    //       color: Colors.green, //change your color here
-    //     ),
-    //     title: Container(
-    //       child: Text( _myHandler.title, textAlign: TextAlign.center,
-    //           style: new TextStyle(
-    //               fontSize: 18.0,
-    //               fontWeight: FontWeight.bold,
-    //               color: Colors.black),
-    //         ),
-          
-    //     ),
-    //     backgroundColor: Colors.white,
-    //   ),
-    //   body: new DefaultTabController(
-    //       length: 2,
-    //       child: new Scaffold(
-    //         appBar: new AppBar(
-    //           backgroundColor: Colors.white,
-    //             automaticallyImplyLeading: false,
-
-    //           actions: <Widget>[],
-    //           title: new TabBar(
-    //             controller: _controller,
-    //             tabs: [
-    //             Tab(icon: Text('Home')),
-    //             Tab(icon: Text('Events'))
-    //           ],
-    //             labelColor: Colors.black,
-    //           indicatorColor: Colors.green,
-    //           labelStyle: new TextStyle (fontSize: 16.0, fontWeight: FontWeight.w700),
-    //           ),
-    //         ),
-    //         body: new TabBarView(
-    //           physics: NeverScrollableScrollPhysics(),
-
-    //           children: [
-    //           login(_controller.index),
-    //           login(_controller.index),
-
-    //          // VolunteerLogin()
-    //          // ParticipantLogin(),
-    //         ],
-    //       ),
-    //         ),
-    //       ),
     
-    // );
   }
-   Widget showCaseStudyList() {
-//if (getEventsList.events.length > 0) {
-//  return Container(
-   
-//         child:  TabBarView(
-//             children: [
-               
-//                 Container(
-//                  child: ListView.builder(
-//               shrinkWrap: true,
-//               itemCount: getEventsList.events.length,
-//               itemBuilder: (context, index) {
-//                   return _getItemUI(context, index, 'externalProjectType');
-//               },
+  Widget showList(){
+    print(widget.getEventsList);
+    if (widget.getEventsList.events.length > 0) {
+
+    
+        var token = widget.str;
+     
+return TabBarView(
+          children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 150),
+                child: FleetlyWebview(htmlText:widget.str),
+              ),
               
-//               // itemBuilder: _getItemUI,
-//             ),
-//                ),
-//                Container(
-//                  child: ListView.builder(
-//               shrinkWrap: true,
-//               itemCount: getEventsList.events.length,
-//               itemBuilder: (context, index) {
-//                   return _getItemUI(context, index, 'externalProjectType');
-//               },
+            Container(
+    height: MediaQuery.of(context).size.height,
+
+  //color: CommonColors.volunteerRetreatsListBackgrdColor,
+  child:   ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: widget.getEventsList.events.length,
+                  itemBuilder: (context, index) {
+                    return _listItem(context,index);
+                  },
+                ),
+),
+             ProfilePage(userDetails:widget.userData)
+            // Icon(Icons.directions_car),
+            // Icon(Icons.directions_transit),
+          ],);
+
+}else{
+  return TabBarView(
+          children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 150),
+                child: FleetlyWebview(htmlText:widget.str),
+              ),
               
-//               // itemBuilder: _getItemUI,
-//             ),
-//                ),
-//               // Icon(Icons.directions_car),
-//               // Icon(Icons.directions_transit),
-//             ],
-//           ),
-// );
-// }else{
-return Container(child:  TabBarView(
-            children: [
+             Container(
+               child: Center(child: Text('data'))
+             ),
+             ProfilePage(userDetails:widget.userData)
+            // Icon(Icons.directions_car),
+            // Icon(Icons.directions_transit),
+          ],);
+}
                
-                Container(
-                 child:FleetlyWebview(htmlText:widget.htmlText)),
-               Container(
-                 child: Center(child: Text('data'))
-               ),
-              // Icon(Icons.directions_car),
-              // Icon(Icons.directions_transit),
-            ],),
-);
-// }
+  
+
+  }
+  Widget _listItem(BuildContext context, int index) {
+
+  
+
+  return Container(
+    height: 120,
+    child: Padding(
+      padding: const EdgeInsets.only(top: 10,left: 8,right: 8),
+      child: Card(
+        color: Colors.white,
+            child: Center(
+              child: new ListTile(
+          
+          title: Container(
+             // padding: EdgeInsets.only(left: 8),
+              child: new Text(widget.getEventsList.events[index].type, style: new TextStyle(fontWeight: FontWeight.w400,fontSize: 18,),
+              ),
+          ),
+          subtitle: Column(
+            children: <Widget>[
+             Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Row(
+                  children: <Widget>[
+                    
+                        Flexible(child: new Text(widget.getEventsList.events[index].evetId, maxLines: 3,  overflow: TextOverflow.ellipsis,
+                      style: new TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w100,
+                          //  color: CommonColors.blueShadeWhite,
+                            letterSpacing: 0.2,
+                            wordSpacing: 1)),
+                        ),
+                   // new Text(widget.getEventsList.events[index].locationAddress,maxLines: 2,overflow: TextOverflow.ellipsis, style: new TextStyle(fontWeight: FontWeight.w400,fontSize: 18,),
+                  //  ),
+                    
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Row(
+                  children: <Widget>[
+                    
+                        Flexible(child: new Text(widget.getEventsList.events[index].locationAddress, maxLines: 3,  overflow: TextOverflow.ellipsis,
+                      style: new TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w100,
+                          //  color: CommonColors.blueShadeWhite,
+                            letterSpacing: 0.2,
+                            wordSpacing: 1)),
+                        ),
+                   // new Text(widget.getEventsList.events[index].locationAddress,maxLines: 2,overflow: TextOverflow.ellipsis, style: new TextStyle(fontWeight: FontWeight.w400,fontSize: 18,),
+                  //  ),
+                    
+                  ],
+                ),
+              ),
+
+            ],
+          ),
+              onTap: () {
+               
+
+              },
+          
+        ),
+            ),
+      ),
+    ),
+  );
+} 
+   Widget showTabBarList() {
+
+
+    var token = widget.str;
+return TabBarView(
+          children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 150),
+                child: FleetlyWebview(htmlText:widget.str),
+              ),
+              
+             Container(
+               child: Center(child: Text('data'))
+             ),
+             ProfilePage(userDetails:widget.userData)
+            // Icon(Icons.directions_car),
+            // Icon(Icons.directions_transit),
+          ],);
+
 
                
    }
