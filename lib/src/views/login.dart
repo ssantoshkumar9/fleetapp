@@ -1,8 +1,8 @@
 
     
 import 'dart:io';
+import 'package:fleetly/src/views/forgot_password.dart';
 import 'package:intl/intl.dart';
-import 'package:fleetly/src/login_api.dart';
 import 'package:fleetly/src/models/getdriver_model.dart';
 import 'package:fleetly/src/models/getevents_model.dart';
 import 'package:fleetly/src/models/userdetails_model.dart';
@@ -11,7 +11,6 @@ import 'package:fleetly/src/views/homepage.dart';
 import 'package:fleetly/src/views/login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:date_format/date_format.dart';
 
 //import 'package:flutter_login_demo/services/authentication.dart';
 
@@ -35,6 +34,7 @@ enum FormMode { LOGIN, SIGNUP }
 class _LoginSignUpPageState extends State<LoginSignUpPage> {
   List userDataList;
    BuildContext _context;
+   String alertText;
 GetDrivers getDriversListResultData;
   GetEvents getEventsList;
  var httpClient = new HttpClient();
@@ -65,6 +65,42 @@ GetDrivers getDriversListResultData;
 
   // Perform login or signup
   void _validateAndSubmit() async {
+    if (_emailTextController.text.isEmpty || _passwordTextController.text.isEmpty){
+     if(_emailTextController.text.isEmpty){
+       alertText = "Please enter Email ID";
+        _showDialogAlert();
+
+     }else{
+       bool isVerifiedEmail = isEmail(_emailTextController.text);
+        if (isVerifiedEmail){
+       alertText = "Please enter Password";
+           _showDialogAlert();
+
+
+        }else{
+        alertText = "Please enter valid Email ID";
+
+         _showDialogAlert();
+
+        }
+
+     }
+
+    }else{
+     
+       if ((_emailTextController.text.isNotEmpty) && (_passwordTextController.text.isNotEmpty) ) {
+        bool isVerifiedEmail = isEmail(_emailTextController.text);
+        if (isVerifiedEmail){
+
+        }else{
+        alertText = "Please enter valid Email ID";
+
+         _showDialogAlert();
+
+        }
+
+       }else{
+     
    var userDetails;
 //  var token  = 'VIJXJg5xivRnFlifdcbkBFnE4AUCDzeK5z6ALF4pmdkuby-FYl5lWEwapGyYXOj93IBhbUPy2Fd-prnxAkE-iBWHWhWdfmQjHsUwlw1ZPsO0UErnhS20qKgbUVTNd1FKWPkUjsJNCJ_gIka5Kj7dIZ909K7SC02CZJdx4oPawk8UG5mpQJ4HpMM4hibjXL3ZGsDKpKh9Icwh85hw1qmAqFrPQfUmT1OrpMnWqz_UWz3X3sDPmJM3HL1MQlfBmICtD3FOifvxMmz-hqNYrXNSEcejgtZ_wtgr5zHBlmh1cL27haPe10y_5WvL1fQSh7jta9slvnC2MqsskNsAGt7JB50eN-E6mPZ4yME-6BOPPgd5lP4hTYLiABtmFN6I58xsqCgU_pYTrn-O25ZOZdkwF616E5uQp-HDirC3RHs5vPnRCSKoTfwKTQ2b9VnGzstjxNon5PGbZzGRJz9sTlALFbE5XuJu-pPnqbp2N4wqGSTAtSLr4wwyMYPNnUlKUnbH';
 // final webResponse = await webViewData(token);  
@@ -146,38 +182,21 @@ GetDrivers getDriversListResultData;
  
      }
      }
-     }else{
-       if ((_emailTextController.text.isNotEmpty) && (_emailTextController.text.isNotEmpty) ) {
-         _showDialogAlert();
-
-       }
+     }
+    }
      }
      
    
   }
+bool isEmail(String em) {
 
-void _showVerifyEmailSentDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-         _context = context;
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text("Verify your account"),
-          content: new Text("Link to verify account has been sent to your email"),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("Dismiss"),
-              onPressed: () {
-                _changeFormToLogin();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+  RegExp regExp = new RegExp(p);
+
+  return regExp.hasMatch(em);
+}
+
   @override
   void initState() {
     _errorMessage = "";
@@ -232,7 +251,7 @@ void _showVerifyEmailSentDialog() {
         // return object of type Dialog
         return AlertDialog(
           title: Center(child: new Text("FLEETLY",style: TextStyle(color: Colors.green,fontSize: 18, fontWeight: FontWeight.bold),)),
-          content: new Text("Something went wrong, Please try again."),
+          content: new Text(alertText),
           actions: <Widget>[
             new FlatButton(
               child: new Text("OK"),
@@ -258,8 +277,10 @@ void _showVerifyEmailSentDialog() {
               _showLogo(),
               _showEmailInput(),
               _showPasswordInput(),
+             // Example(),
               _showPrimaryButton(),
-              _showSecondaryButton(),
+              _forgotPasswordButton(),
+              //_showSecondaryButton(),
               _showErrorMessage(),
             ],
           ),
@@ -284,22 +305,50 @@ void _showVerifyEmailSentDialog() {
   }
 
   Widget _showLogo() {
-    return new Hero(
-      tag: 'hero',
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
-        child: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          radius: 48.0,
-         // child: Image.asset('assets/flutter_icon.png'),
+    return new Container(
+                    height: 170.0,
+                    color: Colors.white,
+                    child: new Column(
+                      children: <Widget>[
+                        // Padding(
+                        //     padding: EdgeInsets.only(left: 20.0, top: 20.0),
+                        //     child: new Row(
+                        //       crossAxisAlignment: CrossAxisAlignment.start,
+                        //       children: <Widget>[],
+                        //     )),
+                        Padding(
+                          padding: EdgeInsets.only(top: 60.0),
+                          child:
+                              new Stack(fit: StackFit.loose, children: <Widget>[
+                            new Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                   decoration: new BoxDecoration(
+          image: new DecorationImage(
+              image: new AssetImage("assets/logo.png"),
+              fit: BoxFit.fill,
+          )
         ),
-      ),
-    );
+                                  
+                                  width: 260,
+                                  height: 80,
+                                  
+                                ),
+                              ],
+                            ),
+                          ]),
+                        )
+                      ],
+                    ),
+                  );
+  
   }
 
   Widget _showEmailInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(0.0, 50.0, 0.0, 0.0),
       child: new TextFormField(
         maxLines: 1,
         controller: _emailTextController,
@@ -317,7 +366,7 @@ void _showVerifyEmailSentDialog() {
             // )
             ),
         validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
-        onSaved: (value) => _email = value.trim(),
+        //onSaved: (value) => _email = value.trim(),
       ),
     );
   }
@@ -347,26 +396,38 @@ void _showVerifyEmailSentDialog() {
     );
   }
 
-  Widget _showSecondaryButton() {
+  // Widget _showSecondaryButton() {
+  //   return new FlatButton(
+  //     child: _formMode == FormMode.LOGIN
+  //         ? new Text('Create an account',
+  //             style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300))
+  //         : new Text('Have an account? Sign in',
+  //             style:
+  //                 new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
+  //     onPressed: _formMode == FormMode.LOGIN
+  //         ? _changeFormToSignUp
+  //         : _changeFormToLogin,
+  //   );
+  // }
+Widget _forgotPasswordButton() {
     return new FlatButton(
-      child: _formMode == FormMode.LOGIN
-          ? new Text('Create an account',
-              style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300))
-          : new Text('Have an account? Sign in',
-              style:
-                  new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
-      onPressed: _formMode == FormMode.LOGIN
-          ? _changeFormToSignUp
-          : _changeFormToLogin,
+      child: new Text('Forgot Password',
+              style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
+          
+      onPressed: (){
+         Navigator.of(context).push(new MaterialPageRoute(
+                    builder: (BuildContext context) => new ForgotPasswordPage()));
+
+      }
     );
   }
-
   Widget _showPrimaryButton() {
     return new Padding(
         padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
         child: SizedBox(
           height: 50.0,
           child: new RaisedButton(
+            
             elevation: 5.0,
             shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
             color: Colors.green,

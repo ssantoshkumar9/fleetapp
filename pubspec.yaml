@@ -34,6 +34,10 @@ dependencies:
   intl: ^0.15.8
   date_format: ^1.0.6
   webview_flutter: ^0.3.10+4
+  country_code_picker: ^1.1.7
+  email_validator: "0.1.4"
+  flutter_secure_storage: ^3.2.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -51,8 +55,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #     - assets/flutter_icon.png
+  assets:
+     - assets/logo.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
