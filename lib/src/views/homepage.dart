@@ -5,15 +5,11 @@ import 'package:fleetly/src/models/userdetails_model.dart';
 import 'package:fleetly/src/repositories/get_drivers_api_client.dart';
 import 'package:fleetly/src/repositories/get_drivers_repository.dart';
 import 'package:fleetly/src/user_profile.dart';
-import 'package:fleetly/src/views/profile.dart';
 import 'package:fleetly/src/views/webView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+
 class Homepage extends StatefulWidget {
    
  final GetDriversListRepository getDriversListRepository = GetDriversListRepository(
@@ -36,10 +32,11 @@ class Homepage extends StatefulWidget {
 
 
  class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
+    int _cIndex = 0;
      List<UserDetails> userData;
   final List<MyTabs> _tabs = [new MyTabs(title: "Home"),
   new MyTabs(title: "Events"),
-  new MyTabs(title: "Profile")
+ // new MyTabs(title: "Profile")
   ];
      GetDriversListBloc _getDriversListBloc;
   GetDrivers getDriversListResultData;
@@ -50,12 +47,13 @@ class Homepage extends StatefulWidget {
 String htmlText;
   void initState() {
     super.initState();
+
    //_validateAndGetData();
    
     //  _getDriversListBloc = GetDriversListBloc(getDriversListRepository: widget.getDriversListRepository);
     //  _getDriversListBloc.dispatch(GetDriversListCount());
     //_showList();
-    _controller = new TabController(length: 3, vsync: this);
+    _controller = new TabController(length: 2, vsync: this);
     _myHandler = _tabs[0];
       new MyTabs(title: "Events");
 
@@ -98,42 +96,118 @@ String htmlText;
      }
   }
 
-
+ void _incrementTab(index) {
+    setState(() {
+      _cIndex = index;
+        if (index == 0){
+               print(widget.str);
+              Padding(
+                 padding: const EdgeInsets.only(top: 150),
+                 child: FleetlyWebview(htmlText:widget.str),
+               );
+             }else{
+                ListView.builder(
+                   shrinkWrap: true,
+                   itemCount: widget.getEventsList.events.length,
+                   itemBuilder: (context, index) {
+                     return _listItem(context,index);
+                   },
+                 );
+             }
+    });
+  }
   
   
   @override
   Widget build(BuildContext context) {
     //_validateAndGetData();
    
-      return DefaultTabController(
-         length: 3,
-     child:Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        bottom: TabBar(
-            indicatorColor: Colors.orange,
-              tabs: [
-                Tab(text: 'Home',),
-                Tab(text: 'Events',),
-                Tab(text: 'Profile',),
-              ],
-            ), //backgroundColor: Color.fromRGBO(56, 66, 86, 1.0),
-        backgroundColor: Colors.green,
-        elevation: 0.0,
-        
-        title: Text(
-          'Home',
-          style: TextStyle(fontSize: 24),
-        ),
+      return Scaffold(
+       backgroundColor: Colors.white,
+       appBar: AppBar(
+         automaticallyImplyLeading: false,
+         // bottom: TabBar(
+         //     indicatorColor: Colors.orange,
+         //       tabs: [
+         //         Tab(text: 'Home',),
+         //         Tab(text: 'Events',),
+         //        // Tab(text: 'Profile',),
+         //       ],
+         //     ), //backgroundColor: Color.fromRGBO(56, 66, 86, 1.0),
+         backgroundColor: Colors.green,
+         elevation: 0.0,
+         
+         title: Text(
+           'Home',
+           style: TextStyle(fontSize: 24),
+         ),
+       ),
+       bottomNavigationBar: BottomNavigationBar(
+         currentIndex: _cIndex, // this will be set when a new tab is tapped
+        items: [
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.home,color: _cIndex== 0 ? Colors.green : Colors.black,),
+
+            title: _cIndex== 0 ? new Text('Home',style: TextStyle(color: Colors.green),) :new Text('Home',style: TextStyle(color: Colors.black),),
+          ),
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.event,
+            color: _cIndex== 1 ? Colors.green : Colors.black,),
+            title: _cIndex== 1 ? new Text('Events',style: TextStyle(color: Colors.green),) :new Text('Events',style: TextStyle(color: Colors.black),),
+            
+          ),
+         
+         //  BottomNavigationBarItem(
+         //    icon: Icon(Icons.person),
+         //    title: Text('Profile')
+         //  )
+        ],
+         onTap: (index){
+            
+              setState(() {
+           
+
+              });
+               _incrementTab(index);
+         },
       ),
-      body: SafeArea(
-        
-        child: Container(child:  showList()),
-      ),
-    ),
+    //    bottomNavigationBar: BottomAppBar(
+    //   child: new Row(
+    //     mainAxisSize: MainAxisSize.max,
+    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //     children: <Widget>[
+    //       IconButton(
+    //         icon: Icon(Icons.menu),
+    //         onPressed: () {},
+    //       ),
+    //       IconButton(
+    //         icon: Icon(Icons.search),
+    //         onPressed: () {},
+    //       )
+    //     ],
+    //   ),
+    // ),
+       body: SafeArea(
+         child: Container(child:  showData()),
+         
+        // child: Container(child:  showList()),
+       ),
     );
     
+  }
+  Widget showData(){
+    if (_cIndex == 0){
+ return Container(child: FleetlyWebview(htmlText:widget.str),
+ height: MediaQuery.of(context).size.height,);
+    }else{
+return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: widget.getEventsList.events.length,
+                  itemBuilder: (context, index) {
+                    return _listItem(context,index);
+                  },
+                );
+    }
   }
   Widget showList(){
     print(widget.getEventsList);
@@ -161,7 +235,7 @@ return TabBarView(
                   },
                 ),
 ),
-             ProfilePage(userDetails:widget.userData)
+            // ProfilePage(userDetails:widget.userData)
             // Icon(Icons.directions_car),
             // Icon(Icons.directions_transit),
           ],);
@@ -177,7 +251,7 @@ return TabBarView(
              Container(
                child: Center(child: Text('data'))
              ),
-             ProfilePage(userDetails:widget.userData)
+            // ProfilePage(userDetails:widget.userData)
             // Icon(Icons.directions_car),
             // Icon(Icons.directions_transit),
           ],);
@@ -272,7 +346,7 @@ return TabBarView(
              Container(
                child: Center(child: Text('data'))
              ),
-             ProfilePage(userDetails:widget.userData)
+            // ProfilePage(userDetails:widget.userData)
             // Icon(Icons.directions_car),
             // Icon(Icons.directions_transit),
           ],);

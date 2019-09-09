@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:fleetly/src/exceptions/data_not_found_exception.dart';
 import 'package:http/http.dart' as http;
 
 Future<http.Response> userData(accessToken) async {
@@ -58,4 +59,29 @@ Future<http.Response> userData(accessToken) async {
     
   return  response;
     
+  }
+
+  Future<http.Response> fetchOTP(otpType,otpTypeValue,userName) async {
+
+   final response = await http.get('https://trackanyqa-webapi.azurewebsites.net/api/users/VerifyUser/$otpType/$otpTypeValue/$userName/');
+    //final response = await this.httpClient.get(ApiUrls.caseStudyListUrl+ id);
+    if (response.statusCode == 200) {
+    //var str = response.body;
+    return response;
+    }
+    else if (response.statusCode == 404) {
+     throw new DataNotFoundException("No data found");
+    }
+  }
+   Future<http.Response> confirmPassord(userName,newPassword) async {
+
+   final response = await http.get('https://trackanyqa-webapi.azurewebsites.net/api/users/ResetPassword/$userName/$newPassword/');
+    //final response = await this.httpClient.get(ApiUrls.caseStudyListUrl+ id);
+    if (response.statusCode == 200) {
+    //var str = response.body;
+    return response;
+    }
+    else if (response.statusCode == 404) {
+     throw new DataNotFoundException("No data found");
+    }
   }
