@@ -91,17 +91,7 @@ GetDrivers getDriversListResultData;
        if ((_emailTextController.text.isNotEmpty) && (_passwordTextController.text.isNotEmpty) ) {
         bool isVerifiedEmail = isEmail(_emailTextController.text);
         if (isVerifiedEmail){
-
-        }else{
-        alertText = "Please enter valid Email ID";
-
-         _showDialogAlert();
-
-        }
-
-       }else{
-     
-   var userDetails;
+var userDetails;
 //  var token  = 'VIJXJg5xivRnFlifdcbkBFnE4AUCDzeK5z6ALF4pmdkuby-FYl5lWEwapGyYXOj93IBhbUPy2Fd-prnxAkE-iBWHWhWdfmQjHsUwlw1ZPsO0UErnhS20qKgbUVTNd1FKWPkUjsJNCJ_gIka5Kj7dIZ909K7SC02CZJdx4oPawk8UG5mpQJ4HpMM4hibjXL3ZGsDKpKh9Icwh85hw1qmAqFrPQfUmT1OrpMnWqz_UWz3X3sDPmJM3HL1MQlfBmICtD3FOifvxMmz-hqNYrXNSEcejgtZ_wtgr5zHBlmh1cL27haPe10y_5WvL1fQSh7jta9slvnC2MqsskNsAGt7JB50eN-E6mPZ4yME-6BOPPgd5lP4hTYLiABtmFN6I58xsqCgU_pYTrn-O25ZOZdkwF616E5uQp-HDirC3RHs5vPnRCSKoTfwKTQ2b9VnGzstjxNon5PGbZzGRJz9sTlALFbE5XuJu-pPnqbp2N4wqGSTAtSLr4wwyMYPNnUlKUnbH';
 // final webResponse = await webViewData(token);  
 //        print(webResponse.body);
@@ -183,7 +173,14 @@ GetDrivers getDriversListResultData;
      }
      }
      }
-    }
+        }else{
+        alertText = "Please enter valid Email ID";
+
+         _showDialogAlert();
+
+        }
+
+       }
      }
      
    
