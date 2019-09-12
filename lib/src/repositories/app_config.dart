@@ -1,7 +1,7 @@
       class ApiUrls {
         
      
-      static const String driversListUrl = "https://trackanyqa-webapi.azurewebsites.net/api/Devices/GetDriverForDriverDadhboard/";
+      static const String driversListUrl = "https://qa.fleetly.live/api/Devices/GetDriverForDriverDadhboard/";
       
 
       }
