@@ -51,7 +51,7 @@ class _FleetlyWebviewState extends State<FleetlyWebview> {
          body: new WebviewScaffold
         (
            // url: 'https://www.littlepink.org/retreats/property/application/',
-            url: 'https://trackany-qa.azurewebsites.net/Account/AccountLogin?token=$token' ,
+            url: 'https://qa.fleetly.live/Account/AccountLogin?token=$token' ,
               withZoom: true,
               withLocalStorage: true,
               hidden: true,
