@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fleetly/src/blocs/getdriver_bloc.dart';
 import 'package:fleetly/src/models/getdriver_model.dart';
 import 'package:fleetly/src/models/getevents_model.dart';
@@ -5,10 +7,13 @@ import 'package:fleetly/src/models/userdetails_model.dart';
 import 'package:fleetly/src/repositories/get_drivers_api_client.dart';
 import 'package:fleetly/src/repositories/get_drivers_repository.dart';
 import 'package:fleetly/src/user_profile.dart';
+import 'package:fleetly/src/views/login.dart';
 import 'package:fleetly/src/views/webView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Homepage extends StatefulWidget {
    
@@ -17,13 +22,18 @@ class Homepage extends StatefulWidget {
       httpClient: http.Client(),
     ),
   );
-   Homepage({this.userData,this.getDriversListResultData,this.str,this.getEventsList, this.htmlText});
+   Homepage({this.userData,this.getDriversListResultData,this.reportTime,this.str,this.getEventsList, this.htmlText});
       UserDetails userData;
       GetEvents eventsList;
+      String eventNae;
+      String eventLoc;
+      String reportTime;
+
    String str;
    String htmlText;
   GetDrivers getDriversListResultData;
   GetEvents getEventsList;
+  
   @override
   createState() => new _MyAppState();
 }
@@ -32,7 +42,12 @@ class Homepage extends StatefulWidget {
 
 
  class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
+       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+       int eventCount;
+      Timer timer;
     int _cIndex = 0;
+       BuildContext _context;
+
      List<UserDetails> userData;
   final List<MyTabs> _tabs = [new MyTabs(title: "Home"),
   new MyTabs(title: "Events"),
@@ -47,7 +62,15 @@ class Homepage extends StatefulWidget {
 String htmlText;
   void initState() {
     super.initState();
+        // timer = Timer.periodic(Duration(seconds: 15), (Timer t) => checkForNewSharedLists());
+                  timer = Timer.periodic(Duration(seconds: 300), (Timer t) => checkForNewSharedLists());
 
+
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+   var android = new AndroidInitializationSettings('@mipmap/ic_launcher');
+   var ios = new IOSInitializationSettings();
+   var initSettings = new InitializationSettings(android, ios);
+   flutterLocalNotificationsPlugin.initialize(initSettings,onSelectNotification: selectNotification );
    //_validateAndGetData();
    
     //  _getDriversListBloc = GetDriversListBloc(getDriversListRepository: widget.getDriversListRepository);
@@ -58,6 +81,82 @@ String htmlText;
       new MyTabs(title: "Events");
 
     _controller.addListener(_handleSelected);
+  }
+  Future selectNotification(String payload){
+    debugPrint('print payload : $payload');
+    // showDialog(context: context, builder: (_) => AlertDialog(
+    //   title: new Text('Notification'),
+    //   content: new Text('Payload'),
+    // ));
+  }
+  void checkForNewSharedLists() async{
+      final eventsResponse = await getEventsData(widget.str,widget.getDriversListResultData.deviceIdentifier,widget.reportTime,widget.userData.userName);  
+       print(eventsResponse.body);
+       if (eventsResponse.statusCode == 200) {
+       print(eventsResponse);
+       final events = getEventsFromJson(eventsResponse.body);
+       setState(() {
+        getEventsList = events;
+
+       });
+       eventCount = getEventsList.events.length;
+      checkUserExist();
+       
+    
+       
+       }else  if (eventsResponse.statusCode == 401){
+
+         _showDialogAlert();
+     }
+  }
+   void _showDialogAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+         _context = context;
+        // return object of type Dialog
+        return AlertDialog(
+          title: Center(child: new Text("FLEETLY",style: TextStyle(color: Colors.green,fontSize: 18, fontWeight: FontWeight.bold),)),
+          content: new Text('Token Expired'),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("OK"),
+              onPressed: () {
+     Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (BuildContext context) => new LoginSignUpPage()));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void checkUserExist() async {
+  final storage = new FlutterSecureStorage();
+  String value = await storage.read(key: "EventCount");
+  if (value == "00"){
+    final storage = new FlutterSecureStorage();
+     String val =  value.toString();
+      await storage.write(key: "EventCount", value: val);
+  }else{
+     var eventsavedVal = int.parse(value);
+  
+   if (eventCount > eventsavedVal){
+     String val =  value.toString();
+      await storage.write(key: "EventCount", value: val);
+      if (getEventsList.events[0].severity == 5 ){
+       showNotification();
+
+      };
+   }
+  }
+   
+    }
+  showNotification() async {
+    var android = new AndroidNotificationDetails('channelId', 'channelName', 'channelDescription', priority: Priority.High, importance: Importance.Max);
+    var iOS = new IOSNotificationDetails();
+    var platform = new NotificationDetails(android, iOS);
+    await flutterLocalNotificationsPlugin.show(0, getEventsList.events[0].displayname, getEventsList.events[0].locationAddress, platform,payload: getEventsList.events[0].evetId);
   }
     void _handleSelected() {
     setState(() {
@@ -84,7 +183,7 @@ String htmlText;
     // await http.post(Uri.encodeFull(url), body: activityData);
    
   
-         final eventsResponse = await getEventsData(widget.str,getDriversListResultData.deviceIdentifier,'2019-08-12',getDriversListResultData.email);  
+         final eventsResponse = await getEventsData(widget.str,widget.getDriversListResultData.deviceIdentifier,'2019-08-12',widget.userData.userName);  
        print(eventsResponse.body);
        if (eventsResponse.statusCode == 200) {
        print(eventsResponse);
@@ -323,7 +422,7 @@ return TabBarView(
           ),
               onTap: () {
                
-
+              showNotification();
               },
           
         ),

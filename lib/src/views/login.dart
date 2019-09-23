@@ -1,7 +1,9 @@
 
     
+import 'dart:async';
 import 'dart:io';
 import 'package:fleetly/src/views/forgot_password.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:fleetly/src/models/getdriver_model.dart';
 import 'package:fleetly/src/models/getevents_model.dart';
@@ -11,6 +13,7 @@ import 'package:fleetly/src/views/homepage.dart';
 import 'package:fleetly/src/views/login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 //import 'package:flutter_login_demo/services/authentication.dart';
 
@@ -32,9 +35,12 @@ class LoginSignUpPage extends StatefulWidget {
 enum FormMode { LOGIN, SIGNUP }
 
 class _LoginSignUpPageState extends State<LoginSignUpPage> {
+         FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
   List userDataList;
    BuildContext _context;
    String alertText;
+   String date;
 GetDrivers getDriversListResultData;
   GetEvents getEventsList;
  var httpClient = new HttpClient();
@@ -52,7 +58,6 @@ GetDrivers getDriversListResultData;
   FormMode _formMode = FormMode.LOGIN;
   bool _isIos;
   bool _isLoading;
-
   // Check if form is valid before perform login or signup
   bool _validateAndSave() {
     final form = _formKey.currentState;
@@ -87,7 +92,11 @@ GetDrivers getDriversListResultData;
      }
 
     }else{
-     
+          _showCircularProgress();
+new Center(
+        child:   const Center(child: const CircularProgressIndicator()),
+      );
+     const CircularProgressIndicator();
        if ((_emailTextController.text.isNotEmpty) && (_passwordTextController.text.isNotEmpty) ) {
         bool isVerifiedEmail = isEmail(_emailTextController.text);
         if (isVerifiedEmail){
@@ -103,7 +112,7 @@ var userDetails;
         print(_emailTextController.text,);
         print( _password);
         var body = {'username': _emailTextController.text, 'password': _passwordTextController.text,'grant_type':'password'};
-      Response res = await post('https://qa.fleetly.live/api/users/login?=',body: body);
+      Response res = await post('https://trackanyqa-webapi.azurewebsites.net/api/users/login?=',body: body);
       // await httpClient.post('https://trackany-qa.azurewebsites.net//api/users/login?=',body);
       print(res);
       if (res.statusCode == 200) {
@@ -130,9 +139,36 @@ var userDetails;
        final resourcesList = getDriversFromJson(driverresponse.body);
          getDriversListResultData = resourcesList;
          print(getDriversListResultData.lastReportedTime);
-         DateFormat dateFormat = DateFormat("dd-MMM-yyyy HH:mm");
+         var time = getDriversListResultData.lastReportedTime;
+         if (time.contains(' AM') || time.contains(' PM')){
+           var lastRepTime;
+
+           if (time.contains(' AM')){
+           lastRepTime = time.replaceAll(' AM', '');
+
+           }else{
+           lastRepTime = time.replaceAll(' PM', '');
+
+           }
+         DateFormat dateFormat = DateFormat("dd-MM-yyyy HH:mm");
+         DateTime dateTime = dateFormat.parse(lastRepTime);
+         print(dateTime);
+          print(dateTime.toString());
+          String date = dateTime.toString();
+          date.split('T');
+          date = date[0];
+         }else{
+        DateFormat dateFormat = DateFormat("dd-MMM-yyyy HH:mm");
          DateTime dateTime = dateFormat.parse(getDriversListResultData.lastReportedTime);
          print(dateTime);
+          print(dateTime.toString());
+          String date = dateTime.toString();
+          date.split('T');
+          date = date[0];
+         }
+         
+
+
 
   //        DateTime todayDate = DateTime.parse(getDriversListResultData.lastReportedTime);
   // print(todayDate);
@@ -148,17 +184,26 @@ var userDetails;
       // print(formattedReportedDate); 
     // final http.Response response =
     // await http.post(Uri.encodeFull(url), body: activityData);
-         final eventsResponse = await getEventsData(accessToken,getDriversListResultData.deviceIdentifier,'22019-08-12',getDriversListResultData.email);  
+
+         final eventsResponse = await getEventsData(accessToken,getDriversListResultData.deviceIdentifier,date,userDetails.userName);  
        print(eventsResponse.body);
        if (eventsResponse.statusCode == 200) {
        print(eventsResponse);
        final events = getEventsFromJson(eventsResponse.body);
        getEventsList = events;
        Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (BuildContext context) => new Homepage(str:accessToken,userData:userDetails, getDriversListResultData: getDriversListResultData,getEventsList :getEventsList)));
+                      builder: (BuildContext context) => new Homepage(str:accessToken,userData:userDetails, reportTime: date,getDriversListResultData: getDriversListResultData,getEventsList :getEventsList)));
 
-       }
+       }else  if (eventsResponse.statusCode == 401){
+         alertText = "Toke Expired";
+
+         _showDialogAlert();
+     }
        
+     }else  if (driverresponse.statusCode == 401){
+         alertText = "Toke Expired";
+
+         _showDialogAlert();
      }
 
        // var token = 'K-4fZozwL5snw9j6tyoRfk3VwxT2MNydsIehwVFMVt73fFUMtfzxZtZvu6vU__ff2uccnw1-R0gqZHJiWgHtoGj76GOEsvT40UmAa3dW03RNQ49acbT0BRxxR8k-0x07Th3-4i-JnJLrtbOMnLk3vfgNgNwpRRBvn1U3Ec12Lq5JKSBoZny62lQA4-oVWdi9ymeAulVSMkZqKC8kbrtiQRBlOI_S8vrqJZGw2LFiT1gUANE2rMXtdhGTAQvRJl8bp2Hhd3um4jr0h64bB0unwzROC-Q3BiQkSP_FTgzxcePBxqzZpo8XdcXUJ_1zLHjEthWWpD64m-mvOWL2zaSEMDOlt1-Mu1NJ_SEv-DjdSCtMbq9ydKswHIgvl6c-9MBXxHdWB7sAGa_5pd1iJ9cPUgAex2LB4RKg96ES7m-zKj6-H-m9nCxxhOn1_uiD2_IsNdIx4zFkWasldh-5UDMNiqH7QhsmuRjYLhDzuIlvlCXz-AoBCMSp3_iA0joy1Px-';
@@ -170,8 +215,20 @@ var userDetails;
 //Navigator.of(context).push(new MaterialPageRoute(
                   //    builder: (BuildContext context) => new Homepage(str:accessToken, htmlText:webResponse.body)));
  
+     }else  if (response.statusCode == 401){
+         alertText = "Toke Expired";
+
+         _showDialogAlert();
      }
      }
+     } else if (res.statusCode == 400){ 
+       alertText = "Please enter valid Email ID";
+
+         _showDialogAlert();
+     }else { 
+       alertText = "Something went wrong, please try again";
+
+         _showDialogAlert();
      }
         }else{
         alertText = "Please enter valid Email ID";
@@ -184,6 +241,9 @@ var userDetails;
      }
      
    
+  } 
+  Widget checkForNewSharedLists(){
+    
   }
 bool isEmail(String em) {
 
@@ -193,14 +253,36 @@ bool isEmail(String em) {
 
   return regExp.hasMatch(em);
 }
-
+void saveEventCount() async {
+    final storage = new FlutterSecureStorage();
+      await storage.write(key: "EventCount", value: "0");
+}
   @override
   void initState() {
     _errorMessage = "";
      _isLoading = false;
     super.initState();
+    saveEventCount();
+   
+  //   flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+  //  var android = new AndroidInitializationSettings('@mipmap/ic_launcher');
+  //  var ios = new IOSInitializationSettings();
+  //  var initSettings = new InitializationSettings(android, ios);
+  //  flutterLocalNotificationsPlugin.initialize(initSettings,onSelectNotification: selectNotification );
   }
-
+//  Future selectNotification(String payload){
+//     debugPrint('print payload : $payload');
+//     showDialog(context: context, builder: (_) => AlertDialog(
+//       title: new Text('Notification'),
+//       content: new Text(payload),
+//     ));
+//   }
+//   showNotification() async {
+//     var android = new AndroidNotificationDetails('channelId', 'channelName', 'channelDescription', priority: Priority.High, importance: Importance.Max);
+//     var iOS = new IOSNotificationDetails();
+//     var platform = new NotificationDetails(android, iOS);
+//     await flutterLocalNotificationsPlugin.show(0, 'title', 'body', platform,payload: 'this is my name');
+//   }
   void _changeFormToSignUp() {
     _formKey.currentState.reset();
     _errorMessage = "";
@@ -436,6 +518,7 @@ Widget _forgotPasswordButton() {
             //         style: new TextStyle(fontSize: 20.0, color: Colors.white))
             //     : new Text('Create account',
             //         style: new TextStyle(fontSize: 20.0, color: Colors.white)),
+            //onPressed: showNotification,
             onPressed: _validateAndSubmit,
           ),
         ));
