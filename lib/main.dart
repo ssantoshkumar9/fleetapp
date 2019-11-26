@@ -1,10 +1,29 @@
+import 'package:fleetly/src/views/homepage.dart';
 import 'package:fleetly/src/views/login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+   Future <String> checkUserExist() async {
+  final storage = new FlutterSecureStorage();
+  String value = await storage.read(key: "token");
+    if (["", null].contains(value)) { 
+       deleteKeys();
+      return  "";
+     } else{
+      return  value;
+     }
+    }
+     void deleteKeys() async{
+  FlutterSecureStorage storage = FlutterSecureStorage();
+
+  await storage.deleteAll();
+
+   }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,6 +43,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: LoginSignUpPage(),
+      // home: checkUserExist().toString() == "" ? LoginSignUpPage() : Homepage(),
+      // routes: <String, WidgetBuilder>{
+      //   '/home': (BuildContext context) => Homepage(),
+      //   '/login' : (BuildContext context) => LoginSignUpPage(),
+        
+      // },
      // home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }

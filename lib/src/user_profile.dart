@@ -6,9 +6,10 @@ import 'package:http/http.dart' as http;
 
 Future<http.Response> userData(accessToken) async {
   //https://trackanyqa-webapi.azurewebsites.net/api/users/byUserName/
+  //'https://trackanyqa-webapi.azurewebsites.net/api/users/byUserName/',
 
   final response = await http.get(
-    'https://trackanyqa-webapi.azurewebsites.net/api/users/byUserName/',
+    'https://api-qa.fleetly.tech/api/users/byUserName/',
     headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},
   );
   print("Bearer $accessToken");
@@ -17,6 +18,7 @@ Future<http.Response> userData(accessToken) async {
   }
   Future<http.Response> webViewData(accessToken) async {
   //https://trackanyqa-webapi.azurewebsites.net/api/users/byUserName/
+   //'https://trackany-qa.azurewebsites.net/Account/AccountLogin?token=$accessToken',
 
   final response = await http.get(
   
@@ -29,23 +31,25 @@ Future<http.Response> userData(accessToken) async {
   return  response;
     
   }
+  
   Future<http.Response> getDriversData(accessToken) async {
   //https://trackanyqa-webapi.azurewebsites.net/api/users/byUserName/
 
   final response = await http.get(
-    'https://trackanyqa-webapi.azurewebsites.net/api/Devices/GetDriverForDriverDadhboard/',
+    'https://api-qa.fleetly.tech/api/Devices/GetDriverForDriverDadhboard/',
     headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},
   );
   print("Bearer $accessToken");
   return  response;
     
   }
-  Future<http.Response> getEventsData(accessToken,deviceIdentifier,lastReportedTime,userName) async {
+
+ Future<http.Response> getEventsData(accessToken,lastReportedTime) async {
   //https://trackanyqa-webapi.azurewebsites.net/api/users/byUserName/
 
     // final http.Response response =
     // await http.post(Uri.encodeFull(url), body: activityData);
-  final response = await http.get(Uri.encodeFull('https://trackanyqa-webapi.azurewebsites.net/api/GetVehicleEventsList/$deviceIdentifier/2019-08-19/$userName/')
+  final response = await http.get(Uri.encodeFull('https://api-qa.fleetly.tech/api/GetEvents/$lastReportedTime')
    
     ,
     headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},
@@ -57,9 +61,26 @@ Future<http.Response> userData(accessToken) async {
     
   }
 
-  Future<http.Response> fetchOTP(otpType,otpTypeValue,userName) async {
+  // Future<http.Response> getEventsData(accessToken,deviceIdentifier,lastReportedTime,userName) async {
+  // //https://trackanyqa-webapi.azurewebsites.net/api/users/byUserName/
 
-   final response = await http.get('https://trackanyqa-webapi.azurewebsites.net/api/users/VerifyUser/$otpType/$otpTypeValue/$userName/');
+  //   // final http.Response response =
+  //   // await http.post(Uri.encodeFull(url), body: activityData);
+  // final response = await http.get(Uri.encodeFull('https://trackanyqa-webapi.azurewebsites.net/api/GetVehicleEventsList/$deviceIdentifier/2019-08-19/$userName/')
+   
+  //   ,
+  //   headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},
+  // );
+  // print("Bearer $accessToken");
+
+    
+  // return  response;
+    
+  // }
+
+  Future<http.Response> fetchOTP(otpType,otpTypeValue,userName) async {
+//https://trackanyqa-webapi.azurewebsites.net/api/users/VerifyUser/$otpType/$otpTypeValue/$userName/'
+   final response = await http.get('https://api-qa.fleetly.tech/api/users/VerifyUser/$otpType/$otpTypeValue/$userName/');
     //final response = await this.httpClient.get(ApiUrls.caseStudyListUrl+ id);
     if (response.statusCode == 200) {
     //var str = response.body;
@@ -70,8 +91,8 @@ Future<http.Response> userData(accessToken) async {
     }
   }
    Future<http.Response> confirmPassord(userName,newPassword) async {
-
-   final response = await http.get('https://trackanyqa-webapi.azurewebsites.net/api/users/ResetPassword/$userName/$newPassword/');
+//https://trackanyqa-webapi.azurewebsites.net/api/users/ResetPassword/$userName/$newPassword/
+   final response = await http.get('https://api-qa.fleetly.tech/api/users/ResetPassword/$userName/$newPassword/');
     //final response = await this.httpClient.get(ApiUrls.caseStudyListUrl+ id);
     if (response.statusCode == 200) {
     //var str = response.body;
