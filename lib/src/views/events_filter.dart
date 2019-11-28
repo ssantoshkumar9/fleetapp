@@ -238,7 +238,7 @@ pr.style(
   }
   Widget _showCancelButton() {
     return new Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 45.0, 10.0, 0.0),
+        padding: EdgeInsets.fromLTRB(0.0, 20.0, 10.0, 15.0),
         child: SizedBox(
           height: 40.0,
           child: new RaisedButton(
@@ -260,7 +260,7 @@ pr.style(
   }
   Widget _showPrimaryButton() {
     return new Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
+        padding: EdgeInsets.fromLTRB(0.0, 20.0, 15.0, 15.0),
         child: SizedBox(
           height: 40.0,
           child: new RaisedButton(
@@ -402,7 +402,204 @@ Map<String, String> headers = {HttpHeaders.authorizationHeader: "Bearer $token",
     var platform = new NotificationDetails(android, iOS);
     await flutterLocalNotificationsPlugin.show(0, getEventsList[0].type.toString(), getEventsList[0].address, platform,payload: getEventsList[0].eventId);
   }
-   
+     Widget showData(){
+    return Container(
+                height: MediaQuery.of(context).size.height,
+                child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: 1,
+                        itemBuilder: (context, index) {
+                          return _listItem(context);
+                        },
+                      ),
+              );
+  }
+  Widget _listItem(BuildContext context){
+    return Container(
+          //height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  checkbox("Tracking Events", trackingEvents ,27 ),
+                  checkbox("General Information", generalInformation, 28),
+                  
+                ],
+              ),
+              Row(children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Container(child: Text('Severity',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),),
+                ),
+              ],),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  checkbox("Low", low, 0),
+                  checkbox("Medium", medium,1),
+                  checkbox("High", high, 2),
+
+                ],
+              ),
+              Row(children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, top: 8),
+                  child: Container(child: Text('Clasification',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),),
+                ),
+              ],),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  checkbox("Incident", incident,3),
+                  checkbox("Accident", accident,4),
+                 checkbox("Dismissed", dismissed,5),
+
+          
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  
+                  checkbox("Intervention", intervention,6),
+                  checkbox("Un Assigned", unassigned,7),
+                  
+
+                ],
+              ),
+               Row(children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, top: 8),
+                  child: Container(child: Text('Tracking Event Types',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),),
+                ),
+              ],),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  
+                  checkbox("Speed", speed,8),
+                  checkbox("Sudden Acceleration", suddenAcceleration,9),
+
+
+                ],
+              ),
+
+               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  
+                    checkbox("Sudden Breaking", suddenBreaking,10),
+
+
+
+                ],
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  
+                  checkbox("Emergency", emergency,11),
+                  checkbox("GShock", gshock,12),
+                  checkbox("Sudden Turn", suddenturn,13),
+
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  
+                  checkbox("System", system,14),
+                  checkbox("SD Card Removed", sdcardremoved,15),
+
+                ],
+              ),
+               Row(children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, top: 8),
+                  child: Container(child: Text('General Event Types',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),),
+                ),
+              ],),
+               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  
+                  checkbox("UserRequest", userrequest,16),
+                  checkbox("Normal", normal,17),
+                   checkbox("Acc Off", accoff,18),
+
+                ],
+              ),
+               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  
+                  checkbox("Acc On", accon,19),
+                  checkbox("Power Cut", powercut,20),
+                   checkbox("Vibration", vibration,21),
+
+                ],
+              ),
+               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  
+                  checkbox("Sound Alarm", soundalarm,22),
+                  checkbox("GeoFenceRuleException", geofenceruleexc,23),
+
+                ],
+              ),
+                Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  
+                              checkbox("Enter Geofence Area", entergeofencearea,24),
+
+                ],
+              ),
+                  
+               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  
+                  checkbox("Exit Geofence Area", exitgeofencearea,25),
+                  checkbox("UNKNOWN", unknown,26),
+
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  _showCancelButton(),
+                  _showPrimaryButton(),
+
+                ],
+              ),
+              
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.start ,
+              //   children: <Widget>[
+                  
+              //     checkbox("Mon", monVal),
+              //     checkbox("Tu", tuVal),
+              //     checkbox("Wed", wedVal),
+              //     checkbox("Thur", thurVal),
+              //     checkbox("Fri", friVal),
+              //   ],
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: <Widget>[
+              //     checkbox("Sat", satVal),
+              //     checkbox("Sun", sunVal),
+              //   ],
+              // ),
+            ],
+          ),
+        );
+  }
   @override
   Widget build(BuildContext context) {
     
@@ -414,176 +611,7 @@ generalEvents.clear();
           title: Text("Event Filters", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),),
           centerTitle: true,
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                checkbox("Tracking Events", trackingEvents ,27 ),
-                checkbox("General Information", generalInformation, 28),
-                
-              ],
-            ),
-            Row(children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: Container(child: Text('Severity',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),),
-              ),
-            ],),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                checkbox("Low", low, 0),
-                checkbox("Medium", medium,1),
-                checkbox("High", high, 2),
-
-              ],
-            ),
-            Row(children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 15, top: 8),
-                child: Container(child: Text('Clasification',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),),
-              ),
-            ],),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                checkbox("Incident", incident,3),
-                checkbox("Accident", accident,4),
-               checkbox("Dismissed", dismissed,5),
-
-        
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                
-                checkbox("Intervention", intervention,6),
-                checkbox("Un Assigned", unassigned,7),
-                
-
-              ],
-            ),
-             Row(children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 15, top: 8),
-                child: Container(child: Text('Tracking Event Types',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),),
-              ),
-            ],),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                
-                checkbox("Speed", speed,8),
-                checkbox("Sudden Acceleration", suddenAcceleration,9),
-                 checkbox("Sudden Breaking", suddenBreaking,10),
-
-
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                
-                checkbox("Emergency", emergency,11),
-                checkbox("GShock", gshock,12),
-                checkbox("Sudden Turn", suddenturn,13),
-
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                
-                checkbox("System", system,14),
-                checkbox("SD Card Removed", sdcardremoved,15),
-
-              ],
-            ),
-             Row(children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 15, top: 8),
-                child: Container(child: Text('General Event Types',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),),
-              ),
-            ],),
-             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                
-                checkbox("UserRequest", userrequest,16),
-                checkbox("Normal", normal,17),
-                 checkbox("Acc Off", accoff,18),
-
-              ],
-            ),
-             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                
-                checkbox("Acc On", accon,19),
-                checkbox("Power Cut", powercut,20),
-                 checkbox("Vibration", vibration,21),
-
-              ],
-            ),
-             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                
-                checkbox("Sound Alarm", soundalarm,22),
-                checkbox("GeoFenceRuleException", geofenceruleexc,23),
-
-              ],
-            ),
-              Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                
-                            checkbox("Enter Geofence Area", entergeofencearea,24),
-
-              ],
-            ),
-                
-             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                
-                checkbox("Exit Geofence Area", exitgeofencearea,25),
-                checkbox("UNKNOWN", unknown,26),
-
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                _showCancelButton(),
-                _showPrimaryButton(),
-
-              ],
-            ),
-            
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.start ,
-            //   children: <Widget>[
-                
-            //     checkbox("Mon", monVal),
-            //     checkbox("Tu", tuVal),
-            //     checkbox("Wed", wedVal),
-            //     checkbox("Thur", thurVal),
-            //     checkbox("Fri", friVal),
-            //   ],
-            // ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: <Widget>[
-            //     checkbox("Sat", satVal),
-            //     checkbox("Sun", sunVal),
-            //   ],
-            // ),
-          ],
-        ));
+        body: Container(child: showData(),));
   }
   
 }

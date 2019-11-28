@@ -494,7 +494,7 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
             ),
             Container(
               child: Container(
-                height: MediaQuery.of(context).size.height - 250,
+                height: MediaQuery.of(context).size.height -200,
                 child: _searchController.text.isNotEmpty
                     ? ListView.builder(
                         shrinkWrap: true,
@@ -881,8 +881,8 @@ imgCount = 0;
                 // child: Image.network(responseData.image),
                 //child: Center(
                 child: new Container(
-                    width: 30.0,
-                    height: 30.0,
+                    width: 38.0,
+                    height: 38.0,
                     decoration: new BoxDecoration(
                         borderRadius: new BorderRadius.circular(20.0),
                         shape: BoxShape.rectangle,
@@ -896,7 +896,7 @@ imgCount = 0;
               title: Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(top: 8, left: 4),
+                    padding: const EdgeInsets.only(top: 2, left: 4),
                     child: Row(
                       children: <Widget>[
                         Container(
@@ -912,10 +912,10 @@ imgCount = 0;
                                   wordSpacing: 1)),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 0),
+                          padding: const EdgeInsets.only(left: 4),
                           child: Center(
                             child: Container(
-                              width: 128,
+                              width: 140,
                               child: new Text(data[index].type.toString(),
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
@@ -938,7 +938,7 @@ imgCount = 0;
                 ],
               ),
               subtitle: Padding(
-                padding: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top: 2),
                 child: Container(
                   child: Column(
                     children: <Widget>[
@@ -965,9 +965,9 @@ imgCount = 0;
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left:0,),
+                            padding: const EdgeInsets.only(left:4,),
                             child: Container(
-                              width: 40,
+                              width: 70,
                               child: new Text(date,
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
