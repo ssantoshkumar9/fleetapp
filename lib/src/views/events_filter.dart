@@ -281,7 +281,6 @@ pr.style(
         ));
   }
   Widget _validateAndSubmit(){
-pr.show();
    
     severity.clear();
     generalEvents.clear();
@@ -305,11 +304,13 @@ checkForNewSharedLists();
     var token = widget.token;
     var time = widget.reportTime;
     time = '"' + time + '"';
+          pr.show();
+
 Map<String, String> headers = {HttpHeaders.authorizationHeader: "Bearer $token","Content-Type": "application/json"};
  String json = '{"Datetime": $time, "TrackingEvents": $generalEvents, "Severity": $severity,"Take":120,"Skip":0}';
  
 // var severity = [1,2,3];
-      final eventsResponse = await post('https://api-qa.fleetly.tech/api/GetEvents', headers: headers,body: json);
+      final eventsResponse = await post('https://api.fleetly.tech/api/GetEvents', headers: headers,body: json);
       print(eventsResponse);
       //final eventsResponse = await getEventsData(widget.str,widget.reportTime);  
        print(eventsResponse.body);
@@ -403,16 +404,32 @@ Map<String, String> headers = {HttpHeaders.authorizationHeader: "Bearer $token",
     await flutterLocalNotificationsPlugin.show(0, getEventsList[0].type.toString(), getEventsList[0].address, platform,payload: getEventsList[0].eventId);
   }
      Widget showData(){
-    return Container(
-                height: MediaQuery.of(context).size.height,
-                child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: 1,
-                        itemBuilder: (context, index) {
-                          return _listItem(context);
-                        },
-                      ),
-              );
+    return Column(
+      children: <Widget>[
+        Container(
+                    height: MediaQuery.of(context).size.height-180,
+                    child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: 1,
+                            itemBuilder: (context, index) {
+                              return _listItem(context);
+                            },
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                    _showCancelButton(),
+                    _showPrimaryButton(),
+
+                ],
+              ),
+                  ),
+      ],
+    );
+    
   }
   Widget _listItem(BuildContext context){
     return Container(
@@ -569,14 +586,7 @@ Map<String, String> headers = {HttpHeaders.authorizationHeader: "Bearer $token",
 
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  _showCancelButton(),
-                  _showPrimaryButton(),
-
-                ],
-              ),
+              
               
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.start ,

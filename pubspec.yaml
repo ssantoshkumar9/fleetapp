@@ -40,6 +40,7 @@ dependencies:
   flutter_local_notifications: ^0.8.3
   shared_preferences: ^0.4.3
   progress_dialog: ^1.2.0
+  datetime_picker_formfield: ^0.4.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -65,6 +66,45 @@ flutter:
      - assets/car.png
      - assets/filter.png
      - assets/calendar.png
+     - AccOff1.jpg
+     - AccOff2.jpg
+     - AccOff3.jpg
+     - AccOn1.jpg
+     - AccOn2.jpg
+     - AccOn3.jpg
+     - Emergency1.jpg
+     - Emergency2.jpg
+     - Emergency3.jpg
+     - EnterArea3.jpg
+     - ExitArea3.jpg
+     - GShock1.jpg
+     - GShock2.jpg
+     - GShock3.jpg
+     - PowerCut.jpg
+     - Snapshot1.jpg
+     - Snapshot2.jpg
+     - Snapshot3.jpg
+     - SoundAlarm.jpg
+     - speed1.jpg
+     - Speed2.jpg
+     - speed3.jpg
+     - SuddenAcceleration1.jpg
+     - SuddenAcceleration2.jpg
+     - SuddenAcceleration3.jpg
+     - SuddenBraking1.jpg
+     - SuddenBraking2.jpg
+     - SuddenBraking3.jpg
+     - SuddenTurn1.jpg
+     - SuddenTurn2.jpg
+     - SuddenTurn3.jpg
+     - System3.jpg
+     - Unknown.jpg
+     - UserRequest1.jpg
+     - UserRequest2.jpg
+     - UserRequest3.jpg
+     - Vibration1.jpg
+     - Vibration2.jpg
+
      
 
   #  - images/a_dot_ham.jpeg

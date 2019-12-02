@@ -9,6 +9,7 @@ import 'package:fleetly/src/models/userdetails_model.dart';
 import 'package:fleetly/src/repositories/get_drivers_api_client.dart';
 import 'package:fleetly/src/repositories/get_drivers_repository.dart';
 import 'package:fleetly/src/user_profile.dart';
+import 'package:fleetly/src/views/datepicker.dart';
 import 'package:fleetly/src/views/events_filter.dart';
 import 'package:fleetly/src/views/images.dart';
 import 'package:fleetly/src/views/login.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -50,7 +52,9 @@ class Homepage extends StatefulWidget {
   String str;
   String htmlText;
   GetDrivers getDriversListResultData;
-  List<NewEventsList> getEventsList;
+  List<NewEventsList> getEventsList = [];
+    List<NewEventsList> _searchResult = [];
+
 
   @override
   createState() => new _MyAppState();
@@ -79,12 +83,208 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
   MyTabs _myHandler;
   TabController _controller;
   String str;
-  List<NewEventsList> getEventsList;
-  List<NewEventsList> _searchResult;
+  List<NewEventsList> getEventsList = [];
+  List<NewEventsList> _searchResult = [];
+    List<NewEventsList> _bothResult = [];
+
   List<String> generalEvents = [];
   List severity = [];
 
   String htmlText;
+
+ final TextEditingController _searchController = TextEditingController();
+    final TextEditingController _dateController = TextEditingController();
+
+
+  final FocusNode _searchbarFocus = FocusNode();
+ 
+ 
+
+  DateTime _date = new DateTime.now();
+   var nowDate = new DateTime.now();
+   var formatter = new DateFormat('yyyy-MM-dd');
+
+  TimeOfDay _time = new TimeOfDay.now();
+
+  Future<Null> _selectDate(BuildContext context) async{
+
+    final DateTime picked = await showDatePicker(
+      
+      context: context,initialDate: _date,firstDate: new DateTime(2016),
+      lastDate: new DateTime(2020)
+    );
+    print(_date);
+    if (picked != null && picked != _date){
+      print('date selected: ${_date.toString()}');
+      setState(() {
+        _date = picked;
+        String formattedReportedDate = formatter.format(_date);
+        _dateController.text = formattedReportedDate;
+        if (_dateController.text.isNotEmpty && _searchController.text.isNotEmpty){
+
+     var formatter = new DateFormat('dd-MMM-yyyy');
+    String formattedReportedDate = formatter.format(_date);
+      _bothResult.clear();
+
+      for (int i = 0; i < _searchResult.length; i++) {
+        NewEventsList data = _searchResult[i];
+        if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
+          _bothResult.add(data);
+        }else{
+         print(_searchResult.length);
+
+
+        }
+
+      }
+
+
+        }else{
+          _searchResult.clear();
+   var formatter = new DateFormat('dd-MMM-yyyy');
+    String formattedReportedDate = formatter.format(_date);
+       var formatter2 = new DateFormat('yyyy-MM-dd');
+
+        String formattedReportedDate2 = formatter2.format(_date);
+
+          _dateController.text = formattedReportedDate2;
+
+      for (int i = 0; i < widget.getEventsList.length; i++) {
+        NewEventsList data = widget.getEventsList[i];
+        if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
+                    _searchResult.add(data);
+
+        }else{
+
+        }
+      }
+        }
+
+      });
+    }else{
+       setState(() {
+        _date = picked;
+        if (picked == null) {
+
+        }else{
+            var formatter2 = new DateFormat('yyyy-MM-dd');
+
+        String formattedReportedDate2 = formatter2.format(_date);
+                _dateController.text = formattedReportedDate2;
+        if (_dateController.text.isNotEmpty && _searchController.text.isNotEmpty){
+
+     var formatter = new DateFormat('dd-MMM-yyyy');
+    String formattedReportedDate = formatter.format(_date);
+       _bothResult.clear();
+      for (int i = 0; i < _searchResult.length; i++) {
+        NewEventsList data = _searchResult[i];
+        if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
+          _bothResult.add(data);
+
+        }else{
+           print(_searchResult.length);
+
+
+        }
+
+      }
+
+
+        }else{
+          _searchResult.clear();
+   var formatter = new DateFormat('dd-MMM-yyyy');
+    String formattedReportedDate = formatter.format(_date);
+    var formatter2 = new DateFormat('yyyy-MM-dd');
+
+        String formattedReportedDate2 = formatter2.format(_date);
+
+          _dateController.text = formattedReportedDate2;
+      for (int i = 0; i < widget.getEventsList.length; i++) {
+        NewEventsList data = widget.getEventsList[i];
+        if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
+                    _searchResult.add(data);
+
+        }else{
+
+        }
+      }
+        }
+        }
+       
+
+      });
+    }
+  }
+
+
+
+//   Future<Null>   _selectDate(BuildContext context) async{
+         
+
+//     final DateTime picked = await showDatePicker(
+//       context: context,initialDate: _date,firstDate: new DateTime(2016),
+//       lastDate: new DateTime(2020)
+//     );
+
+//     if (picked != null && picked != _date){
+//       print('date selected: ${_date.toString()}');
+//       setState(() {
+//         _date = picked;
+//         if (_searchController.text.isNotEmpty) {
+// setState(() {
+  
+  
+//        if (_date.toString() != null) {
+//       // String formattedReportedDate = formatter.format(_date);
+
+//          var formatter = new DateFormat('dd-MMM-yyyy');
+//     String formattedReportedDate = formatter.format(_date);
+//    var formatter2 = new DateFormat('yyyy-MM-dd');
+//        String formattedReportedDate2 = formatter2.format(_date);
+// _dateController.text = formattedReportedDate2;
+
+//     print(_searchResult.length);
+// if (_searchResult.length > 0){
+//   for (int i = 0; i < _searchResult.length; i++) {
+//         NewEventsList data = _searchResult[i];
+//         if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase())  ) {
+//         }else{
+//           _searchResult.remove(data);
+
+//         }
+//       }
+// }else{
+
+// }
+      
+//     }
+//     });
+//         }else{
+// setState(() {
+//        if (_date.toString() != null) {
+
+//          var formatter = new DateFormat('dd-MMM-yyyy');
+//     String formattedReportedDate = formatter.format(_date);
+
+//       for (int i = 0; i < widget.getEventsList.length; i++) {
+//         NewEventsList data = widget.getEventsList[i];
+//         if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase())  ) {
+//         }else{
+//          _searchResult.remove(data);
+
+//         }
+//       }
+//     }
+//     });
+//         }
+        
+//       });
+//     }else{
+
+
+
+//     }
+//   }
   void initState() {
     super.initState();
     // timer = Timer.periodic(Duration(seconds: 15), (Timer t) => checkForNewSharedLists());
@@ -152,7 +352,7 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
 
 // var severity = [1,2,3];
     final eventsResponse = await post(
-        'https://api-qa.fleetly.tech/api/GetEvents',
+        'https://api.fleetly.tech/api/GetEvents',
         headers: headers,
         body: json);
     print(eventsResponse);
@@ -297,9 +497,7 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
     });
   }
 
-  final TextEditingController _searchController = TextEditingController();
-
-  final FocusNode _searchbarFocus = FocusNode();
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -424,6 +622,7 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
   }
 
   Widget showData() {
+
     if (_cIndex == 0) {
       return Container(
         child: FleetlyWebview(htmlText: widget.str),
@@ -435,13 +634,14 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
+              padding: const EdgeInsets.only(left: 5, top: 20, bottom: 20),
               child: Row(
                 children: <Widget>[
-                  Container(child: _searchBar(), width: 200),
+                   Container(child: _dateSearchBar(), width: 140),
+
                   GestureDetector(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 20, top: 1),
+                      padding: const EdgeInsets.only(left: 5, top: 1),
                       child: Container(
                         width: 25,
                         height: 25,
@@ -457,6 +657,8 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
                       ),
                     ),
                     onTap: () {
+                     _selectDate(context);
+
                       // Navigator.of(context).push(new MaterialPageRoute(
                       //     builder: (BuildContext context) =>
                       //         new EventsFilterPage(
@@ -464,12 +666,17 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
                       //             reportTime: widget.reportTime)));
                     },
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Container(child: _searchBar(), width: 140),
+                  ),
+
                   GestureDetector(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 40, top: 4),
+                      padding: const EdgeInsets.only(left: 8, top: 4),
                       child: Container(
-                        width: 25,
-                        height: 25,
+                        width: 22,
+                        height: 22,
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: AssetImage(
@@ -482,7 +689,7 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
                       ),
                     ),
                     onTap: () {
-                      Navigator.of(context).push(new MaterialPageRoute(
+                  Navigator.of(context).push(new MaterialPageRoute(
                           builder: (BuildContext context) =>
                               new EventsFilterPage(
                                   token: widget.str,
@@ -492,37 +699,9 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
                 ],
               ),
             ),
-            Container(
-              child: Container(
-                height: MediaQuery.of(context).size.height -200,
-                child: _searchController.text.isNotEmpty
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _searchResult.length,
-                        itemBuilder: (context, index) {
-                          return _listItem(context, index, _searchResult);
-                        },
-                      )
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: widget.getEventsList.length,
-                        itemBuilder: (context, index) {
-                          return _listItem(
-                              context, index, widget.getEventsList);
-                        },
-                      ),
-              ),
-            ),
-            // Container(
-            //   height: MediaQuery.of(context).size.height-200,
-            //   child: ListView.builder(
-            //                 shrinkWrap: true,
-            //                 itemCount: widget.getEventsList.length,
-            //                 itemBuilder: (context, index) {
-            //                   return _listItem(context,index);
-            //                 },
-            //               ),
-            // ),
+            searchNotEmpty(),
+           
+           
           ],
         );
       } else {
@@ -531,13 +710,15 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
+              padding: const EdgeInsets.only(left: 5, top: 20, bottom: 20),
               child: Row(
                 children: <Widget>[
-                  Container(child: _searchBar(), width: 200),
+                 Container(child: _dateSearchBar(), width: 140),
+
+                  
                   GestureDetector(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 20, top: 1),
+                      padding: const EdgeInsets.only(left: 5, top: 1),
                       child: Container(
                         width: 25,
                         height: 25,
@@ -553,6 +734,8 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
                       ),
                     ),
                     onTap: () {
+                    _selectDate(context);
+
                       // Navigator.of(context).push(new MaterialPageRoute(
                       //     builder: (BuildContext context) =>
                       //         new EventsFilterPage(
@@ -560,12 +743,17 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
                       //             reportTime: widget.reportTime)));
                     },
                   ),
+               Padding(
+                 padding: const EdgeInsets.only(left: 8),
+                 child: Container(child: _searchBar(), width: 140),
+               ),
+
                   GestureDetector(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 40, top: 4),
+                      padding: const EdgeInsets.only(left: 8, top: 4),
                       child: Container(
-                        width: 25,
-                        height: 25,
+                        width: 22,
+                        height: 22,
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: AssetImage(
@@ -578,6 +766,10 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
                       ),
                     ),
                     onTap: () {
+                      
+                      //  Navigator.of(context).push(new MaterialPageRoute(
+                      //     builder: (BuildContext context) =>
+                      //         new BasicDateField()));
                       Navigator.of(context).push(new MaterialPageRoute(
                           builder: (BuildContext context) =>
                               new EventsFilterPage(
@@ -625,20 +817,104 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
     }
   }
 
-  onSearchTextChanged(String text) async {
-    _searchResult.clear();
-    if (text.isEmpty) {
-      setState(() {});
-      return;
+  Widget searchNotEmpty(){
+    if (_searchController.text.isNotEmpty && _dateController.text.isNotEmpty) {
+      return Container(
+              child: Container(
+                height: MediaQuery.of(context).size.height -220,
+                child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _bothResult.length,
+                        itemBuilder: (context, index) {
+                          return _listItem(context, index, _searchResult);
+                        },
+                      )
+                    
+              ),
+            );
+
+    }else{
+ return Container(
+              child: Container(
+                height: MediaQuery.of(context).size.height -220,
+                child: _searchController.text.isNotEmpty || _dateController.text.isNotEmpty
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _searchResult.length,
+                        itemBuilder: (context, index) {
+                          return _listItem(context, index, _searchResult);
+                        },
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: widget.getEventsList.length,
+                        itemBuilder: (context, index) {
+                          return _listItem(
+                              context, index, widget.getEventsList);
+                        },
+                      ),
+              ),
+            );
     }
+    
 
-    widget.getEventsList.forEach((userDetail) {
-      if (userDetail.time.contains(text) || userDetail.time.contains(text))
-        _searchResult.add(userDetail);
-    });
-
-    setState(() {});
   }
+  void onSearchTextChanged(String text){
+
+
+    setState(() {
+      print(_date);
+      if (text != null && _dateController.text.isNotEmpty||_dateController.text != "" ){
+print(_dateController.text);
+         if (_date.toString() != null) {
+         var formatter = new DateFormat('dd-MMM-yyyy');
+    String formattedReportedDate = formatter.format(_date);
+_bothResult.clear();
+
+      for (int i = 0; i < _searchResult.length; i++) {
+        NewEventsList data = _searchResult[i];
+        if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ||data.type.toLowerCase().contains(text.toLowerCase()) ||data.vrn.toLowerCase().contains(text.toLowerCase()) || data.driver.toLowerCase().contains(text.toLowerCase()) ) {
+        _bothResult.add(data);
+        }else{
+
+        }
+      }
+    }   }else if (text != null || _dateController.text.isNotEmpty || _dateController.text != "") {
+          _searchResult.clear();
+
+       if  (text != null){
+      for (int i = 0; i < widget.getEventsList.length; i++) {
+        NewEventsList data = widget.getEventsList[i];
+        if (data.type.toLowerCase().contains(text.toLowerCase()) ||data.vrn.toLowerCase().contains(text.toLowerCase()) || data.driver.toLowerCase().contains(text.toLowerCase())) {
+          _searchResult.add(data);
+        }
+      }
+      }else{
+   var formatter = new DateFormat('dd-MMM-yyyy');
+    String formattedReportedDate = formatter.format(_date);
+     for (int i = 0; i < widget.getEventsList.length; i++) {
+        NewEventsList data = widget.getEventsList[i];
+        if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
+          _searchResult.add(data);
+        }
+      }
+      }
+    }
+    });
+   
+    // _searchResult.clear();
+    // if (text.isEmpty) {
+    //   setState(() {});
+    //   return;
+    // }
+
+    // widget.getEventsList.forEach((userDetail) {
+    //   if (userDetail.time.contains(text) || userDetail.time.contains(text))
+    //     _searchResult.add(userDetail);
+    // });
+
+    // setState(() {});
+}
 
 //   onSearchTextChanged(String text) async {
 //     _searchResult.clear();
@@ -697,7 +973,74 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
 // //     });
 
 //   }
+Widget _dateSearchBar() {
 
+    return Container(
+      child: new Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: new Stack(
+                alignment: const Alignment(1.0, 1.0),
+                children: <Widget>[
+                  new TextField(
+                    textInputAction: TextInputAction.search,
+
+                    //focusNode: _searchbarFocus,
+
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+
+                    textAlign: TextAlign.left,
+
+                    decoration: InputDecoration(
+                        contentPadding:
+                            new EdgeInsets.fromLTRB(5.0, 10.0, 0.0, 10.0),
+                        border: InputBorder.none,
+                        hintText: 'Search date',
+                        
+                        hintStyle: TextStyle(
+                            fontWeight: FontWeight.w100,
+                            fontSize: 19,
+                            color: Colors.grey)),
+
+//decoration: InputDecoration(hintText: 'Search'),
+
+                    onChanged: onSearchTextChanged,
+
+                    controller: _dateController,
+                  ),
+
+                  // Icon(Icons.edit,color: Colors.green,),
+                  _dateController.text.length > 0
+                      ? new IconButton(
+                          icon: new Icon(Icons.clear),
+                          onPressed: () {
+                            setState(() {
+                              _dateController.clear();
+                            });
+                          })
+                      : new Container(
+                          height: 0.0,
+                        ),
+                ]),
+          ),
+          new SizedBox(
+            width: 10.0,
+          ),
+       
+        ],
+      ),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(
+            color: Colors.grey, // <--- border color
+
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.all(Radius.elliptical(15, 15))),
+    );
+  }
   Widget _searchBar() {
     return Container(
       child: new Row(
@@ -719,9 +1062,9 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
 
                     decoration: InputDecoration(
                         contentPadding:
-                            new EdgeInsets.fromLTRB(20.0, 10.0, 100.0, 10.0),
+                            new EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                         border: InputBorder.none,
-                        hintText: 'Search for retreats',
+                        hintText: 'Search here',
                         hintStyle: TextStyle(
                             fontWeight: FontWeight.w100,
                             fontSize: 19,
@@ -752,7 +1095,7 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
             width: 10.0,
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 15, top: 10),
+            padding: const EdgeInsets.only(right: 5, top: 12),
             child: new Icon(
               Icons.search,
               color: _searchController.text.length > 0
@@ -769,7 +1112,7 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
 
             width: 1.0,
           ),
-          borderRadius: BorderRadius.all(Radius.elliptical(10, 10))),
+          borderRadius: BorderRadius.all(Radius.elliptical(15, 15))),
     );
   }
 
@@ -840,7 +1183,233 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
   }
 
   Widget _listItem(BuildContext context, int index, data) {
-    Color color;
+ var assetsImage = new AssetImage("assets/car.png");
+ Color color;
+  //<- Creates an object that fetches an image.
+    if (data[index].type == "AccOff"){
+     if (data[index].severity == 1){
+assetsImage = new AssetImage("assets/AccOff1.jpg"); 
+color = Colors.orange;
+
+      }else if (data[index].severity == 2){
+assetsImage = new AssetImage("assets/AccOff2.jpg"); 
+color = Colors.blue;
+
+      }else{
+assetsImage = new AssetImage("assets/AccOff3.jpg"); 
+color = Colors.red;
+
+      }
+    }else if (data[index].type == "AccOn"){
+    if (data[index].severity == 1){
+assetsImage = new AssetImage("assets/AccOn1.jpg"); 
+color = Colors.orange;
+
+      }else if (data[index].severity == 2){
+assetsImage = new AssetImage("assets/AccOn2.jpg"); 
+color = Colors.blue;
+
+      }else{
+assetsImage = new AssetImage("assets/AccOn3.jpg"); 
+color = Colors.red;
+
+      }
+    }else if (data[index].type == "Emergency"){
+          if (data[index].severity == 1){
+assetsImage = new AssetImage("assets/Emergency1.jpg"); 
+color = Colors.orange;
+
+      }else if (data[index].severity == 2){
+assetsImage = new AssetImage("assets/Emergency2.jpg"); 
+color = Colors.blue;
+
+      }else{
+assetsImage = new AssetImage("assets/Emergency3.jpg"); 
+color = Colors.red;
+
+      }
+      
+    }else if (data[index].type == "EnterArea"){
+ 
+assetsImage = new AssetImage("assets/EnterArea3.jpg"); 
+
+      color = Colors.red;
+
+      
+    }else if (data[index].type == "ExitArea"){
+
+assetsImage = new AssetImage("assets/ExitArea3.jpg"); 
+color = Colors.red;
+
+    
+      
+    }else if (data[index].type == "GShock"){
+          if (data[index].severity == 1){
+assetsImage = new AssetImage("assets/GShock1.jpg"); 
+color = Colors.orange;
+
+
+      }else if (data[index].severity == 2){
+assetsImage = new AssetImage("assets/GShock2.jpg"); 
+color = Colors.blue;
+
+
+      }else{
+assetsImage = new AssetImage("assets/GShock3.jpg"); 
+color = Colors.red;
+
+
+      }
+      
+    }else if (data[index].type == "PowerCut"){
+
+assetsImage = new AssetImage("assets/PowerCut.jpg"); 
+color = Colors.black;
+
+      
+      
+    }else if (data[index].type == "Snapshot"){
+          if (data[index].severity == 1){
+assetsImage = new AssetImage("assets/Snapshot1.jpg"); 
+color = Colors.orange;
+
+
+      }else if (data[index].severity == 2){
+assetsImage = new AssetImage("assets/Snapshot2.jpg"); 
+color = Colors.blue;
+
+
+      }else{
+assetsImage = new AssetImage("assets/Snapshot3.jpg"); 
+color = Colors.red;
+
+
+      }
+      
+    }else if (data[index].type == "SoundAaarm"){
+ 
+assetsImage = new AssetImage("assets/SoundAaarm.jpg"); 
+color = Colors.black;
+ 
+      
+    }else if (data[index].type == "Speed"){
+          if (data[index].severity == 1){
+assetsImage = new AssetImage("assets/speed1.jpg"); 
+color = Colors.orange;
+
+
+      }else if (data[index].severity == 2){
+assetsImage = new AssetImage("assets/Speed2.jpg"); 
+color = Colors.blue;
+
+
+      }else{
+assetsImage = new AssetImage("assets/speed3.jpg"); 
+color = Colors.red;
+
+
+      }
+      
+    }else if (data[index].type == "SuddenAcceleration"){
+          if (data[index].severity == 1){
+assetsImage = new AssetImage("assets/SuddenAcceleration1.jpg"); 
+color = Colors.orange;
+
+
+      }else if (data[index].severity == 2){
+assetsImage = new AssetImage("assets/SuddenAcceleration2.jpg"); 
+color = Colors.blue;
+
+
+      }else{
+assetsImage = new AssetImage("assets/SuddenAcceleration3.jpg"); 
+color = Colors.red;
+
+
+      }
+      
+    }else if (data[index].type == "SuddenBraking"){
+          if (data[index].severity == 1){
+assetsImage = new AssetImage("assets/SuddenBraking1.jpg"); 
+color = Colors.orange;
+
+
+      }else if (data[index].severity == 2){
+assetsImage = new AssetImage("assets/SuddenBraking2.jpg"); 
+color = Colors.blue;
+
+
+      }else{
+assetsImage = new AssetImage("assets/SuddenBraking3.jpg"); 
+color = Colors.red;
+
+
+      }
+      
+    }else if (data[index].type == "SuddenTurn"){
+          if (data[index].severity == 1){
+assetsImage = new AssetImage("assets/SuddenTurn1.jpg"); 
+color = Colors.orange;
+
+
+      }else if (data[index].severity == 2){
+assetsImage = new AssetImage("assets/SuddenTurn2.jpg"); 
+color = Colors.blue;
+
+
+      }else{
+assetsImage = new AssetImage("assets/SuddenTurn3.jpg"); 
+color = Colors.red;
+
+
+      }
+      
+    }else if (data[index].type == "System"){
+
+assetsImage = new AssetImage("assets/System.jpg"); 
+color = Colors.red;
+
+
+      
+      
+    }else if (data[index].type == "Unknown"){
+
+assetsImage = new AssetImage("assets/Unknown.jpg"); 
+
+      color = Colors.black;
+
+      
+    }else if (data[index].type == "UserRequest"){
+          if (data[index].severity == 1){
+assetsImage = new AssetImage("assets/UserRequest1.jpg"); 
+color = Colors.orange;
+
+
+      }else if (data[index].severity == 2){
+assetsImage = new AssetImage("assets/UserRequest2.jpg"); 
+color = Colors.blue;
+
+
+      }else{
+assetsImage = new AssetImage("assets/UserRequest3.jpg"); 
+color = Colors.red;
+
+
+      }
+      
+    }else if (data[index].type == "Vibration"){
+          if (data[index].severity == 1){
+assetsImage = new AssetImage("assets/Vibration1.jpg"); 
+
+      }else if (data[index].severity == 2){
+assetsImage = new AssetImage("assets/Vibration2.jpg"); 
+
+      }else{
+assetsImage = new AssetImage("assets/Vibration2.jpg"); 
+
+      }
+      
+    }
   List images = data[index].images;
   print(images.length);
   if (images.length > 0){
@@ -884,14 +1453,16 @@ imgCount = 0;
                     width: 38.0,
                     height: 38.0,
                     decoration: new BoxDecoration(
-                        borderRadius: new BorderRadius.circular(20.0),
+                       // borderRadius: new BorderRadius.circular(20.0),
                         shape: BoxShape.rectangle,
                         color: Colors.red,
                         image: new DecorationImage(
                           fit: BoxFit.fill,
                           //image: new NetworkImage( "https://foresite.com/wp-content/uploads/2018/02/case-study.jpg")
-                          image: new AssetImage("assets/car.png"),
-                        ))),
+                          image: assetsImage,
+                        )
+                        )
+                        ),
               ),
               title: Column(
                 children: <Widget>[
@@ -922,7 +1493,7 @@ imgCount = 0;
                                   textAlign: TextAlign.left,
                                   style: new TextStyle(
                                       fontSize: 15.0,
-                                      color: Colors.orange,
+                                      color: color,
                                       fontWeight: FontWeight.w400,
                                       //  color: CommonColors.blueShadeWhite,
                                       letterSpacing: 0.2,

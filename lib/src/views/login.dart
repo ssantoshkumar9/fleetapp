@@ -172,7 +172,7 @@ var userDetails;
         print(_emailTextController.text,);
         print( _password);
         var body = {'username': _emailTextController.text, 'password': _passwordTextController.text,'grant_type':'password'};
-      Response res = await post('https://api-qa.fleetly.tech/api/users/login?=',body: body);
+      Response res = await post('https://api.fleetly.tech/api/users/login?=',body: body);
       // await httpClient.post('https://trackany-qa.azurewebsites.net//api/users/login?=',body);
       print(res);
       if (res.statusCode == 200) {
@@ -208,7 +208,7 @@ Map<String, String> headers = {HttpHeaders.authorizationHeader: "Bearer $accessT
 // var events =  ['Speed','SuddenAcceleration','Emergency','GShock','UserRequest','EnterArea','SuddenTurn'];
 // var severity = [1,2,3];
       // var body = {'Datetime': reportTime, 'TrackingEvents':events,'Severity':severity,"Take":120,"Skip":0};
-      Response res = await post('https://api-qa.fleetly.tech/api/GetEvents', headers: headers,body: json);
+      Response res = await post('https://api.fleetly.tech/api/GetEvents', headers: headers,body: json);
       // await httpClient.post('https://trackany-qa.azurewebsites.net//api/users/login?=',body);
       print(res);
       if (res.statusCode == 200) {
@@ -333,7 +333,8 @@ Map<String, String> headers = {HttpHeaders.authorizationHeader: "Bearer $accessT
 //Navigator.of(context).push(new MaterialPageRoute(
                   //    builder: (BuildContext context) => new Homepage(str:accessToken, htmlText:webResponse.body)));
  
-     }else  if (response.statusCode == 401){
+     }
+     else  if (response.statusCode == 401){
          alertText = "Token Expired";
 
          _showDialogAlert();

@@ -9,7 +9,7 @@ Future<http.Response> userData(accessToken) async {
   //'https://trackanyqa-webapi.azurewebsites.net/api/users/byUserName/',
 
   final response = await http.get(
-    'https://api-qa.fleetly.tech/api/users/byUserName/',
+    'https://api.fleetly.tech/api/users/byUserName/',
     headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},
   );
   print("Bearer $accessToken");
