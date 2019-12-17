@@ -9,7 +9,7 @@ Future<http.Response> userData(accessToken) async {
   //'https://trackanyqa-webapi.azurewebsites.net/api/users/byUserName/',
 
   final response = await http.get(
-    'https://api.fleetly.tech/api/users/byUserName/',
+    'https://api-qa.fleetly.tech/api/users/byUserName/',
     headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},
   );
   print("Bearer $accessToken");
@@ -36,7 +36,7 @@ Future<http.Response> userData(accessToken) async {
   //https://trackanyqa-webapi.azurewebsites.net/api/users/byUserName/
 
   final response = await http.get(
-    'https://api-qa.fleetly.tech/api/Devices/GetDriverForDriverDadhboard/',
+    'https://api.fleetly.tech/api/Devices/GetDriverForDriverDadhboard/',
     headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},
   );
   print("Bearer $accessToken");
@@ -49,7 +49,7 @@ Future<http.Response> userData(accessToken) async {
 
     // final http.Response response =
     // await http.post(Uri.encodeFull(url), body: activityData);
-  final response = await http.get(Uri.encodeFull('https://api-qa.fleetly.tech/api/GetEvents/$lastReportedTime')
+  final response = await http.get(Uri.encodeFull('https://api.fleetly.tech/api/GetEvents/$lastReportedTime')
    
     ,
     headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},

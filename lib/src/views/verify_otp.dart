@@ -38,25 +38,10 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
     // TODO: implement initState
     super.initState();
   }
-
-  @override
-  Widget build(BuildContext context) {
-    // print(widget.userDetails);
-    _context = context;
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('Reset Password'),
-          backgroundColor: Colors.green,
-        ),
-        body: new Container(
-          color: Colors.white,
-          child: new ListView(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  new Container(
-                    height: 170.0,
-                    color: Colors.white,
+Widget _showLogo() {
+    return new Container(
+                    height: 150.0,
+                    color: Colors.transparent,
                     child: new Column(
                       children: <Widget>[
                         // Padding(
@@ -66,7 +51,7 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
                         //       children: <Widget>[],
                         //     )),
                         Padding(
-                          padding: EdgeInsets.only(top: 60.0),
+                          padding: EdgeInsets.only(top: 30.0),
                           child:
                               new Stack(fit: StackFit.loose, children: <Widget>[
                             new Row(
@@ -76,13 +61,14 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
                                 Container(
                                    decoration: new BoxDecoration(
           image: new DecorationImage(
-              image: new AssetImage("assets/logo.png"),
+            
+              image: new AssetImage("assets/loginlogo.png"),
               fit: BoxFit.fill,
           )
         ),
                                   
-                                  width: 260,
-                                  height: 80,
+                                  width: 300,
+                                  height: 100,
                                   
                                 ),
                               ],
@@ -91,67 +77,133 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
                         )
                       ],
                     ),
-                  ),
+                  );
+  
+  }
+  @override
+  Widget build(BuildContext context) {
+    // print(widget.userDetails);
+    _context = context;
+    return new Scaffold(
+        // appBar: new AppBar(
+        //   title: new Text('Reset Password'),
+        //   backgroundColor: Colors.green,
+        // ),
+        body:Stack(
+          children: <Widget>[
+           Container(
+             
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/login.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: null /* add child content here */,
+      ),
+           new ListView(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  _showLogo(),
+        //           new Container(
+        //             height: 170.0,
+        //             color: Colors.white,
+        //             child: new Column(
+        //               children: <Widget>[
+        //                 // Padding(
+        //                 //     padding: EdgeInsets.only(left: 20.0, top: 20.0),
+        //                 //     child: new Row(
+        //                 //       crossAxisAlignment: CrossAxisAlignment.start,
+        //                 //       children: <Widget>[],
+        //                 //     )),
+        //                 Padding(
+        //                   padding: EdgeInsets.only(top: 60.0),
+        //                   child:
+        //                       new Stack(fit: StackFit.loose, children: <Widget>[
+        //                     new Row(
+        //                       crossAxisAlignment: CrossAxisAlignment.center,
+        //                       mainAxisAlignment: MainAxisAlignment.center,
+        //                       children: <Widget>[
+        //                         Container(
+        //                            decoration: new BoxDecoration(
+        //   image: new DecorationImage(
+        //       image: new AssetImage("assets/logo.png"),
+        //       fit: BoxFit.fill,
+        //   )
+        // ),
+                                  
+        //                           width: 260,
+        //                           height: 80,
+                                  
+        //                         ),
+        //                       ],
+        //                     ),
+        //                   ]),
+        //                 )
+        //               ],
+        //             ),
+        //           ),
                  
-                   Container(
-                     color: Color(0xffFFFFFF),
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 10.0),
-                      child: new Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: 8.0, right: 8.0, top: 25.0),
-                              child: new Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  new Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      new Text(
-                                        'New Password',
-                                        style: TextStyle(
-                                            fontSize: 17.0,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )),
-                          _enterNewPassword(),
-                              Padding(
-                              padding: EdgeInsets.only(
-                                  left: 8.0, right: 8.0, top: 25.0),
-                              child: new Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  new Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      new Text(
-                                        'Confirm Password',
-                                        style: TextStyle(
-                                            fontSize: 17.0,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )),
-                          _confirmNewPassword(),
-                          
-                           _verifyButton(),
+                   Padding(
+                     padding: EdgeInsets.only(bottom: 10.0),
+                     child: new Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       mainAxisAlignment: MainAxisAlignment.start,
+                       children: <Widget>[
+                         Padding(
+                             padding: EdgeInsets.only(
+                                 left: 8.0, right: 8.0, top: 25.0),
+                             child: new Row(
+                               mainAxisSize: MainAxisSize.max,
+                               children: <Widget>[
+                                 new Column(
+                                   mainAxisAlignment: MainAxisAlignment.start,
+                                   mainAxisSize: MainAxisSize.min,
+                                   children: <Widget>[
+                                     new Text(
+                                       'New Password',
+                                       style: TextStyle(
+                                         color: Colors.white,
+                                           fontSize: 17.0,
+                                           fontWeight: FontWeight.w500),
+                                     ),
+                                   ],
+                                 ),
+                               ],
+                             )),
+                         _enterNewPassword(),
+                             Padding(
+                             padding: EdgeInsets.only(
+                                 left: 8.0, right: 8.0, top: 25.0),
+                             child: new Row(
+                               mainAxisSize: MainAxisSize.max,
+                               children: <Widget>[
+                                 new Column(
+                                   mainAxisAlignment: MainAxisAlignment.start,
+                                   mainAxisSize: MainAxisSize.min,
+                                   children: <Widget>[
+                                     new Text(
+                                       'Confirm Password',
+                                       style: TextStyle(
+                                         color: Colors.white,
+                                           fontSize: 17.0,
+                                           fontWeight: FontWeight.w500),
+                                     ),
+                                   ],
+                                 ),
+                               ],
+                             )),
+                         _confirmNewPassword(),
+                         
+                          _verifyButton(),
 
-                        ],),),)
+                       ],),)
                 ],
               ),
             ],
           ),
-        ));
+          ]));
   }
   Widget _verifyButton() {
     return Padding(

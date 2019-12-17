@@ -107,7 +107,7 @@ if (value != null){
 
 if (prefs.getBool('first_run') ?? true) {
 
-  await storage.deleteAll();
+  //await storage.deleteAll();
 
   prefs.setBool('first_run', false);
 }else{
@@ -171,9 +171,12 @@ var userDetails;
     //                   builder: (BuildContext context) => new Homepage(str:token, htmlText:webResponse.body)));
         print(_emailTextController.text,);
         print( _password);
+
+// debgug url
+        //https://api-qa.fleetly.tech/
         var body = {'username': _emailTextController.text, 'password': _passwordTextController.text,'grant_type':'password'};
-      Response res = await post('https://api.fleetly.tech/api/users/login?=',body: body);
-      // await httpClient.post('https://trackany-qa.azurewebsites.net//api/users/login?=',body);
+      Response res = await post('https://api-qa.fleetly.tech/api/users/login?=',body: body);
+      // await httpClient.post('https://trackany-qa.azurewebsites.net/api/users/login?=',body);
       print(res);
       if (res.statusCode == 200) {
          //final data = res.body;
@@ -196,9 +199,19 @@ var userDetails;
          checkTime();
        }else{
 print(date);
+ var nowDate = new DateTime.now();
+  print(reportTime);
+  var dateSend = '"' + reportTime + '"';
+    var time = new DateFormat("H:m:s").format(nowDate);
+      var timeSend = '"' + time + '"';
 
+    print(timeSend);
 Map<String, String> headers = {HttpHeaders.authorizationHeader: "Bearer $accessToken","Content-Type": "application/json"};
- String json = '{"Datetime": "2019-11-10T13:10:44", "TrackingEvents": ["Speed","SuddenAcceleration","Emergency","GShock","UserRequest","EnterArea","SuddenTurn"], "Severity": [1,2,3],"Take":120,"Skip":0}';
+ //String json = '{"Datetime": "2019-11-10T13:10:44", "TrackingEvents": ["Speed","SuddenAcceleration","Emergency","GShock","UserRequest","EnterArea","SuddenTurn"], "Severity": [1,2,3],"Take":120,"Skip":0}';
+  
+   
+  String json = '{"Datetime": $dateSend,"TimeZone":"","Take":120,"Skip":0, "DeviceIdentifier":""}';
+  
   // make POST request
   //Response res = await post('https://api-qa.fleetly.tech/api/GetEvents', headers: headers, body: json);
  
@@ -208,7 +221,7 @@ Map<String, String> headers = {HttpHeaders.authorizationHeader: "Bearer $accessT
 // var events =  ['Speed','SuddenAcceleration','Emergency','GShock','UserRequest','EnterArea','SuddenTurn'];
 // var severity = [1,2,3];
       // var body = {'Datetime': reportTime, 'TrackingEvents':events,'Severity':severity,"Take":120,"Skip":0};
-      Response res = await post('https://api.fleetly.tech/api/GetEvents', headers: headers,body: json);
+      Response res = await post('https://api-qa.fleetly.tech/api/GetEvents', headers: headers,body: json);
       // await httpClient.post('https://trackany-qa.azurewebsites.net//api/users/login?=',body);
       print(res);
       if (res.statusCode == 200) {
@@ -216,6 +229,11 @@ Map<String, String> headers = {HttpHeaders.authorizationHeader: "Bearer $accessT
      //final resourcesList = loginFromJson(res.body);
       final events = newEventsListFromJson(res.body);
        getEventsList = events;
+       if  (getEventsList.length == 0){
+                saveEventCount();
+
+
+       }
        Navigator.of(context).push(new MaterialPageRoute(
                        builder: (BuildContext context) => new Homepage(str:accessToken,userData:userDetails, reportTime: reportTime,getEventsList :getEventsList)));
 
@@ -487,6 +505,7 @@ pr.style(
             new FlatButton(
               child: new Text("OK"),
               onPressed: () {
+                pr.hide();
                 _changeFormToLogin();
                 Navigator.of(context).pop();
               },
@@ -685,7 +704,7 @@ Widget _forgotPasswordButton() {
             color: Colors.green,
                  child:  new Text('SUBMIT',
                     style: new TextStyle(fontSize: 20.0, color: Colors.white)),
-                
+                splashColor: Colors.grey,
             // child: _formMode == FormMode.LOGIN
             //     ? new Text('SUBMIT',
             //         style: new TextStyle(fontSize: 20.0, color: Colors.white))

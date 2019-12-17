@@ -1,7 +1,7 @@
       class ApiUrls {
         
-     static const String productionurl = "https://www.fleetly.live";
+     static const String debugurl = "https://api-qa.fleetly.tech";
+     static const String productionUrl = "https://api.fleetly.tech";
       static const String driversListUrl = "https://qa.fleetly.live/api/Devices/GetDriverForDriverDadhboard/";
-      
-
+   
       }

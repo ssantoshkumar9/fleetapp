@@ -60,8 +60,10 @@ class Homepage extends StatefulWidget {
   createState() => new _MyAppState();
 }
 
-class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
+class _MyAppState extends State<Homepage> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin<Homepage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+    @override
+bool get wantKeepAlive => true;
   int eventCount;
   Timer timer;
   String idStr;
@@ -341,15 +343,21 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
       severity = [1, 2, 3];
     } //2019-11-10T13:10:44
     // widget.reportTime
+     var timeActual= new DateFormat("H:m:s").format(nowDate);
+      var timeSend = '"' + timeActual + '"';
+
+    print(timeSend);
     var time = widget.reportTime;
      time = '"' + time + '"';
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       "Content-Type": "application/json"
     };
-    String json =
-        '{"Datetime": $time, "TrackingEvents": $generalEvents, "Severity": $severity ,"Take":120,"Skip":0}';
+    // String json =
+    //     '{"Datetime": $time, "TrackingEvents": $generalEvents, "Severity": $severity ,"Take":120,"Skip":0}';
 
+       String json =
+        '{"Datetime": $time,"TimeZone":$timeSend,"Take":120,"Skip":0, "DeviceIdentifier":""}';
 // var severity = [1,2,3];
     final eventsResponse = await post(
         'https://api.fleetly.tech/api/GetEvents',
@@ -411,7 +419,7 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
     await storage.write(key: "reportTime", value: widget.reportTime);
 
     String value = await storage.read(key: "EventCount");
-    if (value == "00") {
+    if (value == "00" || value == "" || value == "0") {
       final storage = new FlutterSecureStorage();
       String val = value.toString();
       await storage.write(key: "EventCount", value: val);
@@ -502,8 +510,9 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     //_validateAndGetData();
-
-    return Scaffold(
+ return new WillPopScope(
+    onWillPop: () async => false,
+    child: Scaffold(
       backgroundColor: Colors.white,
       //  appBar: AppBar(
       //    automaticallyImplyLeading: false,
@@ -558,7 +567,7 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
           ),
           BottomNavigationBarItem(
             icon: new Icon(
-              Icons.event,
+              Icons.lock,
               color: _cIndex == 2 ? Colors.green : Colors.black,
             ),
             title: _cIndex == 2
@@ -611,7 +620,10 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
 
         // child: Container(child:  showList()),
       ),
-    );
+    )
+ );
+
+
   }
 
   void deleteKeys() async {
@@ -671,31 +683,31 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
                     child: Container(child: _searchBar(), width: 140),
                   ),
 
-                  GestureDetector(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8, top: 4),
-                      child: Container(
-                        width: 22,
-                        height: 22,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(
-                              "assets/filter.png",
-                            ),
-                            // fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: null /* add child content here */,
-                      ),
-                    ),
-                    onTap: () {
-                  Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              new EventsFilterPage(
-                                  token: widget.str,
-                                  reportTime: widget.reportTime)));
-                    },
-                  ),
+                  // GestureDetector(
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.only(left: 8, top: 4),
+                  //     child: Container(
+                  //       width: 22,
+                  //       height: 22,
+                  //       decoration: BoxDecoration(
+                  //         image: DecorationImage(
+                  //           image: AssetImage(
+                  //             "assets/filter.png",
+                  //           ),
+                  //           // fit: BoxFit.cover,
+                  //         ),
+                  //       ),
+                  //       child: null /* add child content here */,
+                  //     ),
+                  //   ),
+                  //   onTap: () {
+                  // Navigator.of(context).push(new MaterialPageRoute(
+                  //         builder: (BuildContext context) =>
+                  //             new EventsFilterPage(
+                  //                 token: widget.str,
+                  //                 reportTime: widget.reportTime)));
+                  //   },
+                  // ),
                 ],
               ),
             ),
@@ -748,35 +760,35 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
                  child: Container(child: _searchBar(), width: 140),
                ),
 
-                  GestureDetector(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8, top: 4),
-                      child: Container(
-                        width: 22,
-                        height: 22,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(
-                              "assets/filter.png",
-                            ),
-                            // fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: null /* add child content here */,
-                      ),
-                    ),
-                    onTap: () {
+                  // GestureDetector(
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.only(left: 8, top: 4),
+                  //     child: Container(
+                  //       width: 22,
+                  //       height: 22,
+                  //       decoration: BoxDecoration(
+                  //         image: DecorationImage(
+                  //           image: AssetImage(
+                  //             "assets/filter.png",
+                  //           ),
+                  //           // fit: BoxFit.cover,
+                  //         ),
+                  //       ),
+                  //       child: null /* add child content here */,
+                  //     ),
+                  //   ),
+                  //   onTap: () {
                       
-                      //  Navigator.of(context).push(new MaterialPageRoute(
-                      //     builder: (BuildContext context) =>
-                      //         new BasicDateField()));
-                      Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              new EventsFilterPage(
-                                  token: widget.str,
-                                  reportTime: widget.reportTime)));
-                    },
-                  ),
+                  //     //  Navigator.of(context).push(new MaterialPageRoute(
+                  //     //     builder: (BuildContext context) =>
+                  //     //         new BasicDateField()));
+                  //     Navigator.of(context).push(new MaterialPageRoute(
+                  //         builder: (BuildContext context) =>
+                  //             new EventsFilterPage(
+                  //                 token: widget.str,
+                  //                 reportTime: widget.reportTime)));
+                  //   },
+                  // ),
                 ],
               ),
             ),

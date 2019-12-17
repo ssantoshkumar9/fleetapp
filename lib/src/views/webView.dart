@@ -14,7 +14,25 @@ class FleetlyWebview extends StatefulWidget{
 
 class _FleetlyWebviewState extends State<FleetlyWebview> {
    String htmlText;
-  
+ @override
+  void initState() {
+new WebviewScaffold
+        (
+         // https://qa.fleetly.live/Account/AccountLogin?token=$token
+          
+            url: 'https://www.fleetly.live/Account/AccountLogin?token=$token' ,
+              withZoom: true,
+              withLocalStorage: true,
+              hidden: true,
+              initialChild: Container(
+                child: const Center(
+                 child: CircularProgressIndicator(),
+                ),
+              ),
+              
+    );
+        super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     print(widget.htmlText);
@@ -52,7 +70,6 @@ class _FleetlyWebviewState extends State<FleetlyWebview> {
         (
          // https://qa.fleetly.live/Account/AccountLogin?token=$token
           
-           // url: 'https://www.littlepink.org/retreats/property/application/',
             url: 'https://www.fleetly.live/Account/AccountLogin?token=$token' ,
               withZoom: true,
               withLocalStorage: true,

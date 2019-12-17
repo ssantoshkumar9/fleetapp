@@ -379,7 +379,7 @@ Map<String, String> headers = {HttpHeaders.authorizationHeader: "Bearer $token",
       
 
   String value = await storage.read(key: "EventCount");
-  if (value == "00"){
+  if (value == "00" || value == ""){
     final storage = new FlutterSecureStorage();
      String val =  value.toString();
       await storage.write(key: "EventCount", value: val);
