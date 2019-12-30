@@ -12,65 +12,20 @@ class FleetlyWebview extends StatefulWidget{
 
 
 
-class _FleetlyWebviewState extends State<FleetlyWebview> {
+class _FleetlyWebviewState extends State<FleetlyWebview> with AutomaticKeepAliveClientMixin<FleetlyWebview>{
    String htmlText;
- @override
-  void initState() {
-new WebviewScaffold
-        (
-         // https://qa.fleetly.live/Account/AccountLogin?token=$token
-          
-            url: 'https://www.fleetly.live/Account/AccountLogin?token=$token' ,
-              withZoom: true,
-              withLocalStorage: true,
-              hidden: true,
-              initialChild: Container(
-                child: const Center(
-                 child: CircularProgressIndicator(),
-                ),
-              ),
-              
-    );
-        super.initState();
-  }
-  @override
+ 
+   @override
   Widget build(BuildContext context) {
     print(widget.htmlText);
     var token = widget.htmlText;
     return Scaffold(
-    //   body:          const WebView(
-    //     initialUrl: 'https://trackany-qa.azurewebsites.net/Account/AccountLogin?token=',
-    //     javascriptMode: JavascriptMode.unrestricted,
-    //   ) ,
-    // );
- 
-      // appBar: AppBar(
-      //     // iconTheme: IconThemeData(
-      //     //   color: Colors.green,
-      //     //    //change your color here
-      //     // ),
-      //   title:  Text('ejee', textAlign: TextAlign.center,
-      //     style: new TextStyle(
-      //           fontSize: 18.0,
-      //           fontWeight: FontWeight.bold,
-      //           color: Colors.green),
-      //     ),
-        
-      //   backgroundColor: Colors.white,
-      // ),
-      // body:
-      //     new Container(
-      //       height: 1000.0,
-      //       color: Colors.red,
-      //       child: new WebView(
-      //         initialUrl: 'https://www.littlepink.org/retreats/property/application/',
-      //       ),
-      //     )
+   
          body: new WebviewScaffold
         (
          // https://qa.fleetly.live/Account/AccountLogin?token=$token
           
-            url: 'https://www.fleetly.live/Account/AccountLogin?token=$token' ,
+            url: 'https://qa.fleetly.live/Account/AccountLogin?token=$token' ,
               withZoom: true,
               withLocalStorage: true,
               hidden: true,
@@ -84,4 +39,6 @@ new WebviewScaffold
      
     );
   }
+   @override
+  bool get wantKeepAlive => true;
 }

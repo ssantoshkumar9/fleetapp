@@ -7,25 +7,34 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  String value="Something";
   // This widget is the root of your application.
+   Future<void> login() async {
+      print('LOGGGGINNNNNNNNNNNN');
+      print(await read('token'));
+      value = await read('token');
+
+    }
+Future read(String storageName) async {
+    final _storage = new FlutterSecureStorage();
+
+      return _storage.read(key: storageName);
+    }
    Future <String> checkUserExist() async {
-  final storage = new FlutterSecureStorage();
-  String value = await storage.read(key: "token");
+  //final storage = new FlutterSecureStorage();
+      final prefs = await SharedPreferences.getInstance();
+value = prefs.getString('token');
+   //value = await storage.read(key: "token");
     if (["", null].contains(value)) { 
-       deleteKeys();
       return  "";
      } else{
       return  value;
      }
     }
-     void deleteKeys() async{
-  FlutterSecureStorage storage = FlutterSecureStorage();
-
-  await storage.deleteAll();
-
-   }
+  
   @override
   Widget build(BuildContext context) {
+    checkUserExist();
     return MaterialApp(
        debugShowCheckedModeBanner: false,
 
@@ -42,7 +51,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: LoginSignUpPage(),
+      home: (checkUserExist().toString() == "") ? LoginSignUpPage(): LoginSignUpPage(),
+      routes: <String, WidgetBuilder>{
+        '/login' : (BuildContext context) => LoginSignUpPage(),
+        '/home': (BuildContext context) => Homepage(str: value,),
+        
+        
+      },
       // home: checkUserExist().toString() == "" ? LoginSignUpPage() : Homepage(),
       // routes: <String, WidgetBuilder>{
       //   '/home': (BuildContext context) => Homepage(),

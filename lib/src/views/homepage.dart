@@ -23,6 +23,7 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:progress_dialog/progress_dialog.dart';
 
 class Homepage extends StatefulWidget {
   final GetDriversListRepository getDriversListRepository =
@@ -48,6 +49,7 @@ class Homepage extends StatefulWidget {
   String idStr;
   List<String> generalEvents = [];
   List severity = [];
+  ProgressDialog pr;
 
   String str;
   String htmlText;
@@ -60,18 +62,19 @@ class Homepage extends StatefulWidget {
   createState() => new _MyAppState();
 }
 
-class _MyAppState extends State<Homepage> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin<Homepage> {
+class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
+  bool isDateSelected = false;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-    @override
-bool get wantKeepAlive => true;
   int eventCount;
   Timer timer;
   String idStr;
+  ProgressDialog pr;
 
   int _cIndex = 0;
   BuildContext _context;
     int imgCount = 0;
-
+String sendTime;
+String tokenValue = "";
 
   List<UserDetails> userData;
   final List<MyTabs> _tabs = [
@@ -119,6 +122,11 @@ bool get wantKeepAlive => true;
     if (picked != null && picked != _date){
       print('date selected: ${_date.toString()}');
       setState(() {
+        isDateSelected = true;
+        sendTime = _date.toString();
+        
+        checkForNewSharedListsHome();
+
         _date = picked;
         String formattedReportedDate = formatter.format(_date);
         _dateController.text = formattedReportedDate;
@@ -151,8 +159,8 @@ bool get wantKeepAlive => true;
 
           _dateController.text = formattedReportedDate2;
 
-      for (int i = 0; i < widget.getEventsList.length; i++) {
-        NewEventsList data = widget.getEventsList[i];
+      for (int i = 0; i < getEventsList.length; i++) {
+        NewEventsList data = getEventsList[i];
         if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
                     _searchResult.add(data);
 
@@ -201,8 +209,8 @@ bool get wantKeepAlive => true;
         String formattedReportedDate2 = formatter2.format(_date);
 
           _dateController.text = formattedReportedDate2;
-      for (int i = 0; i < widget.getEventsList.length; i++) {
-        NewEventsList data = widget.getEventsList[i];
+      for (int i = 0; i < getEventsList.length; i++) {
+        NewEventsList data = getEventsList[i];
         if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
                     _searchResult.add(data);
 
@@ -289,6 +297,24 @@ bool get wantKeepAlive => true;
 //   }
   void initState() {
     super.initState();
+    //   pr = new ProgressDialog(context);
+    // pr.style(
+    //     message: 'Please wait...',
+    //     borderRadius: 10.0,
+    //     backgroundColor: Colors.white,
+    //     progressWidget: CircularProgressIndicator(),
+    //     elevation: 10.0,
+    //     insetAnimCurve: Curves.easeInOut,
+    //     progress: 0.0,
+    //     maxProgress: 100.0,
+    //     progressTextStyle: TextStyle(
+    //         color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+    //     messageTextStyle: TextStyle(
+    //         color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
+    checkUserExist();
+   // getToken();
+    getEventsList = widget.getEventsList;
+    //checkForNewSharedListsHome();
     // timer = Timer.periodic(Duration(seconds: 15), (Timer t) => checkForNewSharedLists());
     timer = Timer.periodic(
         Duration(seconds: 300), (Timer t) => checkForNewSharedListsHome());
@@ -324,11 +350,23 @@ bool get wantKeepAlive => true;
     //   content: new Text('Payload'),
     // ));
   }
+ 
+  void checkForNewSharedListsHome() async { 
 
-  void checkForNewSharedListsHome() async {
-    var token = widget.str;
+      final storage = new FlutterSecureStorage();
+
+  tokenValue = await storage.read(key: "token");
+if  (isDateSelected == true){
+
+}else{
+    sendTime = await storage.read(key: "currentTime");
+
+}
+
+    //var token = widget.str;
+    
     if (widget.idStr == "2") {
-      generalEvents = widget.generalEvents;
+      generalEvents = generalEvents;
       severity = widget.severity;
     } else {
       generalEvents = [
@@ -347,30 +385,37 @@ bool get wantKeepAlive => true;
       var timeSend = '"' + timeActual + '"';
 
     print(timeSend);
-    var time = widget.reportTime;
-     time = '"' + time + '"';
+     sendTime = '"' + sendTime + '"';
+
+    //var time = widget.reportTime;
+     print(sendTime);
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token",
+      HttpHeaders.authorizationHeader: "Bearer $tokenValue",
       "Content-Type": "application/json"
     };
     // String json =
     //     '{"Datetime": $time, "TrackingEvents": $generalEvents, "Severity": $severity ,"Take":120,"Skip":0}';
 
        String json =
-        '{"Datetime": $time,"TimeZone":$timeSend,"Take":120,"Skip":0, "DeviceIdentifier":""}';
+        '{"Datetime": $sendTime,"TimeZone":"","Take":120,"Skip":0, "DeviceIdentifier":""}';
 // var severity = [1,2,3];
     final eventsResponse = await post(
-        'https://api.fleetly.tech/api/GetEvents',
+        'https://api-qa.fleetly.tech/api/GetEvents',
         headers: headers,
         body: json);
     print(eventsResponse);
     //final eventsResponse = await getEventsData(widget.str,widget.reportTime);
-    print(eventsResponse.body);
     if (eventsResponse.statusCode == 200) {
+      //pr.hide();
       print(eventsResponse);
       final events = newEventsListFromJson(eventsResponse.body);
       setState(() {
         getEventsList = events;
+        _searchResult = events;
+       if (isDateSelected == true) {
+showData();
+       }
+        
       });
       eventCount = getEventsList.length;
       checkUserExist();
@@ -416,7 +461,7 @@ bool get wantKeepAlive => true;
   void checkUserExist() async {
     final storage = new FlutterSecureStorage();
     await storage.write(key: "token", value: widget.str);
-    await storage.write(key: "reportTime", value: widget.reportTime);
+    //await storage.write(key: "currentTime", value: widget.reportTime);
 
     String value = await storage.read(key: "EventCount");
     if (value == "00" || value == "" || value == "0") {
@@ -424,6 +469,7 @@ bool get wantKeepAlive => true;
       String val = value.toString();
       await storage.write(key: "EventCount", value: val);
     } else {
+     
       var eventsavedVal = int.parse(value);
 
       if (eventCount > eventsavedVal) {
@@ -496,9 +542,9 @@ bool get wantKeepAlive => true;
       } else {
         ListView.builder(
           shrinkWrap: true,
-          itemCount: widget.getEventsList.length,
+          itemCount: getEventsList.length,
           itemBuilder: (context, index) {
-            return _listItem(context, index, widget.getEventsList);
+            return _listItem(context, index, getEventsList);
           },
         );
       }
@@ -506,10 +552,15 @@ bool get wantKeepAlive => true;
   }
 
  
+ void getToken() async { 
+      final storage = new FlutterSecureStorage();
 
+  tokenValue = await storage.read(key: "token");
+ }
   @override
   Widget build(BuildContext context) {
     //_validateAndGetData();
+//getToken();
  return new WillPopScope(
     onWillPop: () async => false,
     child: Scaffold(
@@ -634,14 +685,16 @@ bool get wantKeepAlive => true;
   }
 
   Widget showData() {
-
-    if (_cIndex == 0) {
+//     if (tokenValue == ""){
+// getToken();
+//     }else{
+ if (_cIndex == 0) {
       return Container(
         child: FleetlyWebview(htmlText: widget.str),
         height: MediaQuery.of(context).size.height,
       );
     } else if (_cIndex == 1) {
-      if (widget.getEventsList.length > 0) {
+      if (getEventsList.length > 0) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -649,7 +702,7 @@ bool get wantKeepAlive => true;
               padding: const EdgeInsets.only(left: 5, top: 20, bottom: 20),
               child: Row(
                 children: <Widget>[
-                   Container(child: _dateSearchBar(), width: 140),
+                   Container(child: _dateSearchBar(), width: 140,height: 40,),
 
                   GestureDetector(
                     child: Padding(
@@ -669,6 +722,7 @@ bool get wantKeepAlive => true;
                       ),
                     ),
                     onTap: () {
+                    //  pr.show();
                      _selectDate(context);
 
                       // Navigator.of(context).push(new MaterialPageRoute(
@@ -680,7 +734,7 @@ bool get wantKeepAlive => true;
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8),
-                    child: Container(child: _searchBar(), width: 140),
+                    child: Container(child: _searchBar(), width: 150,height: 40,),
                   ),
 
                   // GestureDetector(
@@ -725,7 +779,7 @@ bool get wantKeepAlive => true;
               padding: const EdgeInsets.only(left: 5, top: 20, bottom: 20),
               child: Row(
                 children: <Widget>[
-                 Container(child: _dateSearchBar(), width: 140),
+                 Container(child: _dateSearchBar(), width: 140,height: 40,),
 
                   
                   GestureDetector(
@@ -746,6 +800,7 @@ bool get wantKeepAlive => true;
                       ),
                     ),
                     onTap: () {
+                    //  pr.show();
                     _selectDate(context);
 
                       // Navigator.of(context).push(new MaterialPageRoute(
@@ -757,7 +812,7 @@ bool get wantKeepAlive => true;
                   ),
                Padding(
                  padding: const EdgeInsets.only(left: 8),
-                 child: Container(child: _searchBar(), width: 140),
+                 child: Container(child: _searchBar(), width: 150, height: 40,),
                ),
 
                   // GestureDetector(
@@ -827,6 +882,9 @@ bool get wantKeepAlive => true;
       // });
 
     }
+//getEventsList = widget.getEventsList;
+   
+   // }
   }
 
   Widget searchNotEmpty(){
@@ -859,10 +917,10 @@ bool get wantKeepAlive => true;
                       )
                     : ListView.builder(
                         shrinkWrap: true,
-                        itemCount: widget.getEventsList.length,
+                        itemCount: getEventsList.length,
                         itemBuilder: (context, index) {
                           return _listItem(
-                              context, index, widget.getEventsList);
+                              context, index, getEventsList);
                         },
                       ),
               ),
@@ -895,8 +953,8 @@ _bothResult.clear();
           _searchResult.clear();
 
        if  (text != null){
-      for (int i = 0; i < widget.getEventsList.length; i++) {
-        NewEventsList data = widget.getEventsList[i];
+      for (int i = 0; i < getEventsList.length; i++) {
+        NewEventsList data = getEventsList[i];
         if (data.type.toLowerCase().contains(text.toLowerCase()) ||data.vrn.toLowerCase().contains(text.toLowerCase()) || data.driver.toLowerCase().contains(text.toLowerCase())) {
           _searchResult.add(data);
         }
@@ -904,8 +962,8 @@ _bothResult.clear();
       }else{
    var formatter = new DateFormat('dd-MMM-yyyy');
     String formattedReportedDate = formatter.format(_date);
-     for (int i = 0; i < widget.getEventsList.length; i++) {
-        NewEventsList data = widget.getEventsList[i];
+     for (int i = 0; i < getEventsList.length; i++) {
+        NewEventsList data = getEventsList[i];
         if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
           _searchResult.add(data);
         }
@@ -1007,7 +1065,7 @@ Widget _dateSearchBar() {
 
                     decoration: InputDecoration(
                         contentPadding:
-                            new EdgeInsets.fromLTRB(5.0, 10.0, 0.0, 10.0),
+                            new EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 10.0),
                         border: InputBorder.none,
                         hintText: 'Search date',
                         
@@ -1029,6 +1087,8 @@ Widget _dateSearchBar() {
                           icon: new Icon(Icons.clear),
                           onPressed: () {
                             setState(() {
+                              isDateSelected = false;
+                              //pr.hide();
                               _dateController.clear();
                             });
                           })
@@ -1129,8 +1189,8 @@ Widget _dateSearchBar() {
   }
 
   Widget showList() {
-    print(widget.getEventsList);
-    if (widget.getEventsList.length > 0) {
+    print(getEventsList);
+    if (getEventsList.length > 0) {
       var token = widget.str;
 
       return TabBarView(
@@ -1156,7 +1216,7 @@ Widget _dateSearchBar() {
                   ),
                   ListView.builder(
                     shrinkWrap: true,
-                    itemCount: widget.getEventsList.length,
+                    itemCount: getEventsList.length,
                     itemBuilder: (context, index) {
                       return _listItem(context, index, getEventsList);
                     },
@@ -1513,7 +1573,7 @@ imgCount = 0;
                             ),
                           ),
                         ),
-                        // new Text(widget.getEventsList.events[index].locationAddress,maxLines: 2,overflow: TextOverflow.ellipsis, style: new TextStyle(fontWeight: FontWeight.w400,fontSize: 18,),
+                        // new Text(getEventsList.events[index].locationAddress,maxLines: 2,overflow: TextOverflow.ellipsis, style: new TextStyle(fontWeight: FontWeight.w400,fontSize: 18,),
                         //  ),
                       ],
                     ),
@@ -1646,7 +1706,7 @@ imgCount == 1 ? Container(
   }
 
   Widget showTabBarList() {
-    var token = widget.str;
+    var token = tokenValue;
     return TabBarView(
       children: [
         Padding(
