@@ -83,7 +83,7 @@ String tokenValue = "";
     new MyTabs(title: "Sign out"),
     // new MyTabs(title: "Profile")
   ];
-  GetDriversListBloc _getDriversListBloc;
+  //GetDriversListBloc _getDriversListBloc;
   GetDrivers getDriversListResultData;
   MyTabs _myHandler;
   TabController _controller;
@@ -116,59 +116,61 @@ String tokenValue = "";
     final DateTime picked = await showDatePicker(
       
       context: context,initialDate: _date,firstDate: new DateTime(2016),
-      lastDate: new DateTime(2020)
+      lastDate: new DateTime(2080)
     );
     print(_date);
     if (picked != null && picked != _date){
       print('date selected: ${_date.toString()}');
       setState(() {
         isDateSelected = true;
-        sendTime = _date.toString();
-        
-        checkForNewSharedListsHome();
-
         _date = picked;
         String formattedReportedDate = formatter.format(_date);
+        sendTime = formattedReportedDate;
         _dateController.text = formattedReportedDate;
-        if (_dateController.text.isNotEmpty && _searchController.text.isNotEmpty){
+        checkForNewSharedListsHome();
 
-     var formatter = new DateFormat('dd-MMM-yyyy');
-    String formattedReportedDate = formatter.format(_date);
-      _bothResult.clear();
+        // _date = picked;
+    //     String formattedReportedDate = formatter.format(_date);
+    //     _dateController.text = formattedReportedDate;
+    //     if (_dateController.text.isNotEmpty && _searchController.text.isNotEmpty){
 
-      for (int i = 0; i < _searchResult.length; i++) {
-        NewEventsList data = _searchResult[i];
-        if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
-          _bothResult.add(data);
-        }else{
-         print(_searchResult.length);
+    //  var formatter = new DateFormat('dd-MMM-yyyy');
+    // String formattedReportedDate = formatter.format(_date);
+    //   _bothResult.clear();
+
+    //   for (int i = 0; i < _searchResult.length; i++) {
+    //     NewEventsList data = _searchResult[i];
+    //     if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
+    //       _bothResult.add(data);
+    //     }else{
+    //      print(_searchResult.length);
 
 
-        }
+    //     }
 
-      }
+    //   }
 
 
-        }else{
-          _searchResult.clear();
-   var formatter = new DateFormat('dd-MMM-yyyy');
-    String formattedReportedDate = formatter.format(_date);
-       var formatter2 = new DateFormat('yyyy-MM-dd');
+    //     }else{
+  //         _searchResult.clear();
+  //  var formatter = new DateFormat('dd-MMM-yyyy');
+  //   String formattedReportedDate = formatter.format(_date);
+  //      var formatter2 = new DateFormat('yyyy-MM-dd');
 
-        String formattedReportedDate2 = formatter2.format(_date);
+  //       String formattedReportedDate2 = formatter2.format(_date);
 
-          _dateController.text = formattedReportedDate2;
+  //         _dateController.text = formattedReportedDate2;
 
-      for (int i = 0; i < getEventsList.length; i++) {
-        NewEventsList data = getEventsList[i];
-        if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
-                    _searchResult.add(data);
+  //     for (int i = 0; i < getEventsList.length; i++) {
+  //       NewEventsList data = getEventsList[i];
+  //       if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
+  //                   _searchResult.add(data);
 
-        }else{
+  //       }else{
 
-        }
-      }
-        }
+  //       }
+  //     }
+  //       }
 
       });
     }else{
@@ -297,20 +299,7 @@ String tokenValue = "";
 //   }
   void initState() {
     super.initState();
-    //   pr = new ProgressDialog(context);
-    // pr.style(
-    //     message: 'Please wait...',
-    //     borderRadius: 10.0,
-    //     backgroundColor: Colors.white,
-    //     progressWidget: CircularProgressIndicator(),
-    //     elevation: 10.0,
-    //     insetAnimCurve: Curves.easeInOut,
-    //     progress: 0.0,
-    //     maxProgress: 100.0,
-    //     progressTextStyle: TextStyle(
-    //         color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-    //     messageTextStyle: TextStyle(
-    //         color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
+   
     checkUserExist();
    // getToken();
     getEventsList = widget.getEventsList;
@@ -352,12 +341,27 @@ String tokenValue = "";
   }
  
   void checkForNewSharedListsHome() async { 
-
+   pr = new ProgressDialog(context);
+    pr.style(
+        message: 'Please wait...',
+        borderRadius: 10.0,
+        backgroundColor: Colors.white,
+        progressWidget: CircularProgressIndicator(),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        progress: 0.0,
+        maxProgress: 100.0,
+        progressTextStyle: TextStyle(
+            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
+            pr.show();
       final storage = new FlutterSecureStorage();
 
   tokenValue = await storage.read(key: "token");
 if  (isDateSelected == true){
-
+  sendTime = sendTime;
+    
 }else{
     sendTime = await storage.read(key: "currentTime");
 
@@ -381,6 +385,10 @@ if  (isDateSelected == true){
       severity = [1, 2, 3];
     } //2019-11-10T13:10:44
     // widget.reportTime
+    var nowDate = new DateTime.now();
+    //var time = nowDate.timeZoneOffset;
+    var time = nowDate.timeZoneName;
+
      var timeActual= new DateFormat("H:m:s").format(nowDate);
       var timeSend = '"' + timeActual + '"';
 
@@ -404,6 +412,7 @@ if  (isDateSelected == true){
         headers: headers,
         body: json);
     print(eventsResponse);
+    pr.hide();
     //final eventsResponse = await getEventsData(widget.str,widget.reportTime);
     if (eventsResponse.statusCode == 200) {
       //pr.hide();
@@ -800,7 +809,7 @@ showData();
                       ),
                     ),
                     onTap: () {
-                    //  pr.show();
+                      pr.show();
                     _selectDate(context);
 
                       // Navigator.of(context).push(new MaterialPageRoute(
@@ -853,7 +862,7 @@ showData();
            child: Container(
                     child: Center(
                       child: Text(
-              'No Events',
+              'There is no events for selected date',
               style: TextStyle(color: Colors.red, fontSize: 20),
             ),
                     )),
@@ -896,7 +905,7 @@ showData();
                         shrinkWrap: true,
                         itemCount: _bothResult.length,
                         itemBuilder: (context, index) {
-                          return _listItem(context, index, _searchResult);
+                          return _listItem(context, index, _bothResult);
                         },
                       )
                     
@@ -930,26 +939,24 @@ showData();
 
   }
   void onSearchTextChanged(String text){
-
-
-    setState(() {
-      print(_date);
-      if (text != null && _dateController.text.isNotEmpty||_dateController.text != "" ){
+setState(() {
+    if (text != null && _dateController.text.isNotEmpty||_dateController.text != "" ){
 print(_dateController.text);
-         if (_date.toString() != null) {
+         if (_date.toString() != null && text != null) {
          var formatter = new DateFormat('dd-MMM-yyyy');
     String formattedReportedDate = formatter.format(_date);
 _bothResult.clear();
 
       for (int i = 0; i < _searchResult.length; i++) {
         NewEventsList data = _searchResult[i];
-        if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ||data.type.toLowerCase().contains(text.toLowerCase()) ||data.vrn.toLowerCase().contains(text.toLowerCase()) || data.driver.toLowerCase().contains(text.toLowerCase()) ) {
+        if (data.type.toLowerCase().contains(text.toLowerCase()) ||data.vrn.toLowerCase().contains(text.toLowerCase()) || data.driver.toLowerCase().contains(text.toLowerCase()) ) {
         _bothResult.add(data);
         }else{
 
         }
       }
-    }   }else if (text != null || _dateController.text.isNotEmpty || _dateController.text != "") {
+    } 
+      }else if (text != null || _dateController.text.isEmpty || _dateController.text == ""){
           _searchResult.clear();
 
        if  (text != null){
@@ -959,18 +966,62 @@ _bothResult.clear();
           _searchResult.add(data);
         }
       }
+      }
       }else{
-   var formatter = new DateFormat('dd-MMM-yyyy');
-    String formattedReportedDate = formatter.format(_date);
-     for (int i = 0; i < getEventsList.length; i++) {
-        NewEventsList data = getEventsList[i];
-        if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
-          _searchResult.add(data);
-        }
+
       }
-      }
-    }
-    });
+});
+
+//     setState(() {
+//       print(_date);
+//       if (text != null && _dateController.text.isNotEmpty||_dateController.text != "" ){
+// print(_dateController.text);
+//          if (_date.toString() != null) {
+//          var formatter = new DateFormat('dd-MMM-yyyy');
+//     String formattedReportedDate = formatter.format(_date);
+// _bothResult.clear();
+
+//       for (int i = 0; i < _searchResult.length; i++) {
+//         NewEventsList data = _searchResult[i];
+//         if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ||data.type.toLowerCase().contains(text.toLowerCase()) ||data.vrn.toLowerCase().contains(text.toLowerCase()) || data.driver.toLowerCase().contains(text.toLowerCase()) ) {
+//         _bothResult.add(data);
+//         }else{
+
+//         }
+//       }
+//     } 
+//       }
+//       else if (text != null || _dateController.text.isNotEmpty || _dateController.text != "") {
+//           _searchResult.clear();
+
+//        if  (text != null){
+//       for (int i = 0; i < getEventsList.length; i++) {
+//         NewEventsList data = getEventsList[i];
+//         if (data.type.toLowerCase().contains(text.toLowerCase()) ||data.vrn.toLowerCase().contains(text.toLowerCase()) || data.driver.toLowerCase().contains(text.toLowerCase())) {
+//           _searchResult.add(data);
+//         }
+//       }
+//       }else{
+//    var formatter = new DateFormat('dd-MMM-yyyy');
+//     String formattedReportedDate = formatter.format(_date);
+//      for (int i = 0; i < getEventsList.length; i++) {
+//         NewEventsList data = getEventsList[i];
+//         if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
+//           _searchResult.add(data);
+//         }
+//       }
+//       }
+//     }
+//     });
+
+
+
+
+
+
+
+
+
    
     // _searchResult.clear();
     // if (text.isEmpty) {
@@ -1243,7 +1294,7 @@ Widget _dateSearchBar() {
               child: Center(
                   child: Container(
                       child: Text(
-            'No Events',
+            'There is no events for selected date',
             style: TextStyle(color: Colors.red, fontSize: 20),
           )))),
           // ProfilePage(userDetails:widget.userData)

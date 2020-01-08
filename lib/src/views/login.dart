@@ -158,7 +158,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
       // String json =
       //     '{"Datetime": $time, "TrackingEvents": $generalEvents, "Severity": $severity ,"Take":120,"Skip":0}';
       if (valueStr != "null" || valueStr != "" || valueStr != null) {
-        var time = valueStr;
+       time = valueStr;
       }
       String json =
           '{"Datetime":$time,"TimeZone":"","Take":120,"Skip":0, "DeviceIdentifier":""}';
