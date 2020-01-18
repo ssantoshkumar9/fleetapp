@@ -229,7 +229,7 @@ String tokenValue = "";
   }
 
 
-
+     
 //   Future<Null>   _selectDate(BuildContext context) async{
          
 
@@ -303,10 +303,10 @@ String tokenValue = "";
     checkUserExist();
    // getToken();
     getEventsList = widget.getEventsList;
-    //checkForNewSharedListsHome();
+   checkForNewSharedListsHome();
     // timer = Timer.periodic(Duration(seconds: 15), (Timer t) => checkForNewSharedLists());
-    timer = Timer.periodic(
-        Duration(seconds: 300), (Timer t) => checkForNewSharedListsHome());
+    // timer = Timer.periodic(
+    //     Duration(seconds: 300), (Timer t) => checkForNewSharedListsHome());
 
     flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
     var android = new AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -314,18 +314,13 @@ String tokenValue = "";
     var initSettings = new InitializationSettings(android, ios);
     flutterLocalNotificationsPlugin.initialize(initSettings,
         onSelectNotification: selectNotification);
-    //_validateAndGetData();
-
-    //  _getDriversListBloc = GetDriversListBloc(getDriversListRepository: widget.getDriversListRepository);
-    //  _getDriversListBloc.dispatch(GetDriversListCount());
-    //_showList();
     _controller = new TabController(length: 3, vsync: this);
     if (widget.idStr == "2") {
       _myHandler = _tabs[1];
       _incrementTab(1);
     } else {
       _myHandler = _tabs[0];
-      checkForNewSharedListsHome();
+      // checkForNewSharedListsHome();
     }
     new MyTabs(title: "Events");
 
@@ -415,19 +410,19 @@ if  (isDateSelected == true){
     pr.hide();
     //final eventsResponse = await getEventsData(widget.str,widget.reportTime);
     if (eventsResponse.statusCode == 200) {
-      //pr.hide();
+      pr.hide();
       print(eventsResponse);
       final events = newEventsListFromJson(eventsResponse.body);
-      setState(() {
+      // setState(() {
         getEventsList = events;
         _searchResult = events;
        if (isDateSelected == true) {
-showData();
+       showData();
        }
         
-      });
+      // });
       eventCount = getEventsList.length;
-      checkUserExist();
+        checkUserExist();
     } else if (eventsResponse.statusCode == 401) {
       checkTokenExp();
       _showDialogAlert();
@@ -461,7 +456,43 @@ showData();
       },
     );
   }
+void _showLogoutDialogAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        _context = context;
+        // return object of type Dialog
+        return AlertDialog(
+          title: Center(
+              child: new Text(
+            "FLEETLY",
+            style: TextStyle(
+                color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold),
+          )),
+          content: new Text('Are you sure you want to close the application?'),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Cancel"),
+              onPressed: () {
+             Navigator.pop(context);
 
+              },
+              
+            ),
+              new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                deleteKeys();
+                Navigator.of(context).push(new MaterialPageRoute(
+                    builder: (BuildContext context) => new LoginSignUpPage()));
+              },
+              
+            ),
+          ],
+        );
+      },
+    );
+  }
   void checkTokenExp() async {
     final storage = new FlutterSecureStorage();
     await storage.write(key: "token", value: "");
@@ -469,10 +500,9 @@ showData();
 
   void checkUserExist() async {
     final storage = new FlutterSecureStorage();
+    await storage.write(key: "EventCount", value: "");
     await storage.write(key: "token", value: widget.str);
-    //await storage.write(key: "currentTime", value: widget.reportTime);
-
-    String value = await storage.read(key: "EventCount");
+     String value = await storage.read(key: "EventCount") ?? "" ;
     if (value == "00" || value == "" || value == "0") {
       final storage = new FlutterSecureStorage();
       String val = value.toString();
@@ -568,7 +598,7 @@ showData();
  }
   @override
   Widget build(BuildContext context) {
-    //_validateAndGetData();
+  //  _validateAndGetData();
 //getToken();
  return new WillPopScope(
     onWillPop: () async => false,
@@ -649,10 +679,12 @@ showData();
         onTap: (index) {
           setState(() {
             if (index == 2) {
+              
               setState(() {
-                deleteKeys();
-                Navigator.of(context).push(new MaterialPageRoute(
-                    builder: (BuildContext context) => new LoginSignUpPage()));
+                _showLogoutDialogAlert();
+              //   deleteKeys();
+              //   Navigator.of(context).push(new MaterialPageRoute(
+              //       builder: (BuildContext context) => new LoginSignUpPage()));
               });
             }
           });
