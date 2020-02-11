@@ -239,7 +239,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           // await httpClient.post('https://trackany-qa.azurewebsites.net/api/users/login?=',body);
           print(res);
           if (res.statusCode == 200) {
-            //final data = res.body;
+            //final data = res.body; 
             final resourcesList = loginFromJson(res.body);
             await storage.write(key: "token", value: resourcesList.accessToken);
             print(resourcesList.accessToken);

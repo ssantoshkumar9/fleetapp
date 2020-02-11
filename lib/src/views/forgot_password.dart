@@ -220,7 +220,7 @@ Widget _showLogo() {
                                       'Password Recovery',
                                       style: TextStyle(
                                         color: Colors.white,
-                                          fontSize: 18.0,
+                                          fontSize: 16.0,
                                           fontWeight: FontWeight.w500),
                                     ),
                                   ],
@@ -242,7 +242,7 @@ Widget _showLogo() {
                                       'Verification Method',
                                       style: TextStyle(
                                         color: Colors.white,
-                                          fontSize: 18.0,
+                                          fontSize: 16.0,
                                           fontWeight: FontWeight.w500),
                                     ),
                                   ],
@@ -347,37 +347,32 @@ Widget _showLogo() {
 
     
                 Flexible(
-                  
-                  child:   Padding(
-          padding: const EdgeInsets.only(left: 8,top: 22),
-          child: TextFormField(
-   controller: _phoneNumberTextController,
-   keyboardType: TextInputType.phone,
+                child:   Padding(
+           padding: const EdgeInsets.only(left: 8,top: 22),
+          child: new TextFormField(
+            maxLines: 1,
+            controller: _phoneNumberTextController,
+             keyboardType: TextInputType.phone,
     autofocus: false,
     maxLength: 12,
-    style: TextStyle(fontSize: 18.0, color: Colors.black),
-    decoration: InputDecoration(
-      filled: true,
-      fillColor: CommonColors.greyColor,
-      hintText: 'Enter Phone number',
-               prefixIcon: new Icon(
-                Icons.phone,
-                color: Colors.green,
-              ),
-      contentPadding:
-            const EdgeInsets.only(left: 14.0, bottom: 18.0, top: 15.0),
-      focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-          borderRadius: BorderRadius.circular(10),
-      ),
-      enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-          borderRadius: BorderRadius.circular(10),
-      ),
-    ),
-    
-  ),
+    style: TextStyle(fontSize: 16.0, color: Colors.white),
+           
+            decoration: new InputDecoration(
+                hintText: 'Enter Phone number',
+                hintStyle: TextStyle(color: Colors.white60),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                prefixIcon: new Icon(
+                  Icons.phone,
+                  color: Colors.green,
+                )
+               
+                ),
+           
+          ),
         ),
+ 
                   flex: 2,
                 ),
               ],
@@ -496,6 +491,34 @@ void _showDialogAlert() {
       },
     );
   }
+
+  //  Widget _showPasswordInput() {
+  //   return Padding(
+  //     padding: const EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
+  //     child: new TextFormField(
+  //       maxLines: 1,
+  //       controller: _passwordTextController,
+  //       obscureText: true,
+  //       autofocus: false,
+  //       style: TextStyle(
+  //         color: Colors.white,
+  //       ),
+  //       decoration: new InputDecoration(
+  //           hintText: 'Password',
+  //           hintStyle: TextStyle(color: Colors.white60),
+  //           enabledBorder: UnderlineInputBorder(
+  //             borderSide: BorderSide(color: Colors.white),
+  //           ),
+  //           prefixIcon: new Icon(
+  //             Icons.lock,
+  //             color: Colors.green,
+  //           )
+           
+  //           ),
+       
+  //     ),
+  //   );
+  // }
   Widget showDropdown() {
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -503,6 +526,7 @@ void _showDialogAlert() {
           decoration: BoxDecoration(
             color: CommonColors.greyColor,
             borderRadius: BorderRadius.circular(10)
+          
         ),
        // color: Colors.grey,
         child: Column(
@@ -533,44 +557,35 @@ void _showDialogAlert() {
       ),
     );
   }
-
-  Widget _showEmailInput() {
+   Widget _showEmailInput() {
     return Column(
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: TextFormField(
-     keyboardType: TextInputType.emailAddress,
-   controller: _emailTextController,
-    autofocus: false,
-    style: TextStyle(fontSize: 18.0, color: Colors.black),
-    decoration: InputDecoration(
-      filled: true,
-      fillColor: CommonColors.greyColor,
-      hintText: 'Enter Email address',
-               prefixIcon: new Icon(
-                Icons.email,
-                color: Colors.green,
-              ),
-      contentPadding:
-            const EdgeInsets.only(left: 14.0, bottom: 18.0, top: 15.0),
-      focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-          borderRadius: BorderRadius.circular(10),
-      ),
-      enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-          borderRadius: BorderRadius.circular(10),
-      ),
-    ),
-   // validator: _validateEmail,
- ),
-  //validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
-
-  ),
-  
-     
-         GestureDetector(
+          child: new TextFormField(
+            maxLines: 1,
+            controller: _emailTextController,
+            obscureText: true,
+            autofocus: false,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+            decoration: new InputDecoration(
+                hintText: 'Enter Email address',
+                hintStyle: TextStyle(color: Colors.white60),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                prefixIcon: new Icon(
+                  Icons.email,
+                  color: Colors.green,
+                )
+               
+                ),
+           
+          ),
+        ),
+             GestureDetector(
                     child: Padding(
                padding: const EdgeInsets.only(top: 20,right: 10),
                child: Container(                
@@ -633,7 +648,108 @@ void _showDialogAlert() {
       ],
       
     );
+     
   }
+//   Widget _showEmailInput() {
+//     return Column(
+//       children: <Widget>[
+//         Padding(
+//           padding: const EdgeInsets.all(8.0),
+//           child: TextFormField(
+//      keyboardType: TextInputType.emailAddress,
+//    controller: _emailTextController,
+//     autofocus: false,
+//     style: TextStyle(fontSize: 18.0, color: Colors.black),
+//     decoration: InputDecoration(
+//       filled: true,
+//       fillColor: CommonColors.greyColor,
+//       hintText: 'Enter Email address',
+//                prefixIcon: new Icon(
+//                 Icons.email,
+//                 color: Colors.green,
+//               ),
+//       contentPadding:
+//             const EdgeInsets.only(left: 14.0, bottom: 18.0, top: 15.0),
+//       focusedBorder: OutlineInputBorder(
+//           borderSide: BorderSide(color: Colors.white),
+//           borderRadius: BorderRadius.circular(10),
+//       ),
+//       enabledBorder: UnderlineInputBorder(
+//           borderSide: BorderSide(color: Colors.white),
+//           borderRadius: BorderRadius.circular(10),
+//       ),
+//     ),
+//    // validator: _validateEmail,
+//  ),
+//   //validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
+
+//   ),
+  
+     
+//          GestureDetector(
+//                     child: Padding(
+//                padding: const EdgeInsets.only(top: 20,right: 10),
+//                child: Container(                
+//                     alignment: Alignment.topRight,
+//                     child: new Container(
+//                 width: 150,
+//                 height: 40,
+//                         decoration: new BoxDecoration(
+//                             color: Colors.green,
+//                             borderRadius: new BorderRadius.circular(40)
+//                         ),
+//                       child: new Center(
+//                         child: Row(
+//                           children: <Widget>[
+//                             Padding(
+//                               padding: const EdgeInsets.only(left: 15,top: 8,bottom: 8),
+//                               child: Text("GET OTP",style: TextStyle(color: Colors.white, fontSize: 18,fontWeight: FontWeight.w600),),
+//                             ),
+//                          Padding(
+//                            padding: const EdgeInsets.only(left: 10),
+//                            child: Icon( Icons.phonelink_lock, color: Colors.white, ),
+//                          ),
+//                           ],
+//                         ),
+//                       )
+
+//                   ),
+        
+//                   ),
+//              ),
+//               onTap: (){
+//             if ((_usernameTextController.text.isNotEmpty) && (_emailTextController.text.isNotEmpty)){
+//              otpType = "email";
+//            bool isValidEmail =  isEmail(_emailTextController.text);
+//            if (isValidEmail){
+//        otpTypeValue =  _emailTextController.text;
+//         userName  = _usernameTextController.text;
+//         print(otpTypeValue);
+//         print(userName);
+//                _getOTPFromDetails();
+//            }else{
+//            dialogText = "Please enter valid Email";
+//            _showDialogAlert();
+//            }
+             
+       
+//              }else{
+//                 if (_usernameTextController.text.isEmpty){
+//                dialogText = "Please enter User name";
+
+//                 }else{
+                  
+//                dialogText = "Please enter Email";
+
+//                 }
+//                _showDialogAlert();
+//              }
+//            },
+//          ),
+//       ],
+      
+//     );
+//   }
 bool isEmail(String em) {
 
   String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -677,53 +793,84 @@ bool isEmail(String em) {
   Widget _showUserNameInput() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-      child: TextFormField(
-      
-   controller: _usernameTextController,
-    autofocus: false,
-    style: TextStyle(fontSize: 18.0, color: Colors.black),
-    decoration: InputDecoration(
-      filled: true,
-      fillColor: CommonColors.greyColor,
-      hintText: 'User Name',
-             prefixIcon: new Icon(
+      child: new TextFormField(
+        cursorColor: Colors.white,
+        maxLines: 1,
+        controller: _usernameTextController,
+        keyboardType: TextInputType.emailAddress,
+        autofocus: false,
+        style: TextStyle(
+          color: Colors.white,
+        ),
+        decoration: new InputDecoration(
+            hintText: 'User Name',
+            hintStyle: TextStyle(color: Colors.white60),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+            prefixIcon: new Icon(
               Icons.person,
               color: Colors.green,
+            )
+
             ),
-      contentPadding:
-          const EdgeInsets.only(left: 14.0, bottom: 18.0, top: 15.0),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
-        borderRadius: BorderRadius.circular(10),
-      ),
-    ),
-      // child: new TextFormField(
-      //   maxLines: 1,
-      //   controller: _usernameTextController,
-      //   keyboardType: TextInputType.emailAddress,
-      //   autofocus: false,
-      //   decoration: new InputDecoration(
-      //       hintText: 'User Name',
-      //       prefixIcon: new Icon(
-      //         Icons.person,
-      //         color: Colors.green,
-      //       )
-      //       // icon: new Icon(
-      //       //   Icons.mail,
-      //       //   color: Colors.grey,
-      //       // )
-      //       ),
-      //   validator: (value) =>
-      //       value.isEmpty ? 'User Name can\'t be empty' : null,
-      //   // onSaved: (value) => _email = value.trim(),
-      // ),
+        // validator: (value) =>
+        //     value.isEmpty ? 'Username or Email can\'t be empty' : null,
+        //onSaved: (value) => _email = value.trim(),
       ),
     );
   }
+  
+  // Widget _showUserNameInput() {
+  //   return Padding(
+  //     padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
+  //     child: TextFormField(
+      
+  //  controller: _usernameTextController,
+  //   autofocus: false,
+  //   style: TextStyle(fontSize: 18.0, color: Colors.black),
+  //   decoration: InputDecoration(
+  //     filled: true,
+  //     fillColor: CommonColors.greyColor,
+  //     hintText: 'User Name',
+  //            prefixIcon: new Icon(
+  //             Icons.person,
+  //             color: Colors.green,
+  //           ),
+  //     contentPadding:
+  //         const EdgeInsets.only(left: 14.0, bottom: 18.0, top: 15.0),
+  //     focusedBorder: OutlineInputBorder(
+  //       borderSide: BorderSide(color: Colors.white),
+  //       borderRadius: BorderRadius.circular(10),
+  //     ),
+  //     enabledBorder: UnderlineInputBorder(
+  //       borderSide: BorderSide(color: Colors.white),
+  //       borderRadius: BorderRadius.circular(10),
+  //     ),
+  //   ),
+  //     // child: new TextFormField(
+  //     //   maxLines: 1,
+  //     //   controller: _usernameTextController,
+  //     //   keyboardType: TextInputType.emailAddress,
+  //     //   autofocus: false,
+  //     //   decoration: new InputDecoration(
+  //     //       hintText: 'User Name',
+  //     //       prefixIcon: new Icon(
+  //     //         Icons.person,
+  //     //         color: Colors.green,
+  //     //       )
+  //     //       // icon: new Icon(
+  //     //       //   Icons.mail,
+  //     //       //   color: Colors.grey,
+  //     //       // )
+  //     //       ),
+  //     //   validator: (value) =>
+  //     //       value.isEmpty ? 'User Name can\'t be empty' : null,
+  //     //   // onSaved: (value) => _email = value.trim(),
+  //     // ),
+  //     ),
+  //   );
+  // }
 
   @override
   void dispose() {

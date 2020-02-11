@@ -55,8 +55,7 @@ class Homepage extends StatefulWidget {
   String htmlText;
   GetDrivers getDriversListResultData;
   List<NewEventsList> getEventsList = [];
-    List<NewEventsList> _searchResult = [];
-
+  List<NewEventsList> _searchResult = [];
 
   @override
   createState() => new _MyAppState();
@@ -72,9 +71,9 @@ class _MyAppState extends State<Homepage> with TickerProviderStateMixin {
 
   int _cIndex = 0;
   BuildContext _context;
-    int imgCount = 0;
-String sendTime;
-String tokenValue = "";
+  int imgCount = 0;
+  String sendTime;
+  String tokenValue = "";
 
   List<UserDetails> userData;
   final List<MyTabs> _tabs = [
@@ -90,36 +89,32 @@ String tokenValue = "";
   String str;
   List<NewEventsList> getEventsList = [];
   List<NewEventsList> _searchResult = [];
-    List<NewEventsList> _bothResult = [];
+  List<NewEventsList> _bothResult = [];
 
   List<String> generalEvents = [];
   List severity = [];
 
   String htmlText;
 
- final TextEditingController _searchController = TextEditingController();
-    final TextEditingController _dateController = TextEditingController();
-
+  final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
 
   final FocusNode _searchbarFocus = FocusNode();
- 
- 
 
   DateTime _date = new DateTime.now();
-   var nowDate = new DateTime.now();
-   var formatter = new DateFormat('yyyy-MM-dd');
+  var nowDate = new DateTime.now();
+  var formatter = new DateFormat('yyyy-MM-dd');
 
   TimeOfDay _time = new TimeOfDay.now();
 
-  Future<Null> _selectDate(BuildContext context) async{
-
+  Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
-      
-      context: context,initialDate: _date,firstDate: new DateTime(2016),
-      lastDate: new DateTime(2080)
-    );
+        context: context,
+        initialDate: _date,
+        firstDate: new DateTime(2016),
+        lastDate: new DateTime(2080));
     print(_date);
-    if (picked != null && picked != _date){
+    if (picked != null && picked != _date) {
       print('date selected: ${_date.toString()}');
       setState(() {
         isDateSelected = true;
@@ -128,110 +123,95 @@ String tokenValue = "";
         sendTime = formattedReportedDate;
         _dateController.text = formattedReportedDate;
         checkForNewSharedListsHome();
-
         // _date = picked;
-    //     String formattedReportedDate = formatter.format(_date);
-    //     _dateController.text = formattedReportedDate;
-    //     if (_dateController.text.isNotEmpty && _searchController.text.isNotEmpty){
+        //     String formattedReportedDate = formatter.format(_date);
+        //     _dateController.text = formattedReportedDate;
+        //     if (_dateController.text.isNotEmpty && _searchController.text.isNotEmpty){
 
-    //  var formatter = new DateFormat('dd-MMM-yyyy');
-    // String formattedReportedDate = formatter.format(_date);
-    //   _bothResult.clear();
+        //  var formatter = new DateFormat('dd-MMM-yyyy');
+        // String formattedReportedDate = formatter.format(_date);
+        //   _bothResult.clear();
 
-    //   for (int i = 0; i < _searchResult.length; i++) {
-    //     NewEventsList data = _searchResult[i];
-    //     if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
-    //       _bothResult.add(data);
-    //     }else{
-    //      print(_searchResult.length);
+        //   for (int i = 0; i < _searchResult.length; i++) {
+        //     NewEventsList data = _searchResult[i];
+        //     if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
+        //       _bothResult.add(data);
+        //     }else{
+        //      print(_searchResult.length);
 
+        //     }
 
-    //     }
+        //   }
 
-    //   }
+        //     }else{
+        //         _searchResult.clear();
+        //  var formatter = new DateFormat('dd-MMM-yyyy');
+        //   String formattedReportedDate = formatter.format(_date);
+        //      var formatter2 = new DateFormat('yyyy-MM-dd');
 
+        //       String formattedReportedDate2 = formatter2.format(_date);
 
-    //     }else{
-  //         _searchResult.clear();
-  //  var formatter = new DateFormat('dd-MMM-yyyy');
-  //   String formattedReportedDate = formatter.format(_date);
-  //      var formatter2 = new DateFormat('yyyy-MM-dd');
+        //         _dateController.text = formattedReportedDate2;
 
-  //       String formattedReportedDate2 = formatter2.format(_date);
+        //     for (int i = 0; i < getEventsList.length; i++) {
+        //       NewEventsList data = getEventsList[i];
+        //       if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
+        //                   _searchResult.add(data);
 
-  //         _dateController.text = formattedReportedDate2;
+        //       }else{
 
-  //     for (int i = 0; i < getEventsList.length; i++) {
-  //       NewEventsList data = getEventsList[i];
-  //       if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
-  //                   _searchResult.add(data);
-
-  //       }else{
-
-  //       }
-  //     }
-  //       }
-
+        //       }
+        //     }
+        //       }
       });
-    }else{
-       setState(() {
+    } else {
+      setState(() {
         _date = picked;
         if (picked == null) {
+        } else {
+          var formatter2 = new DateFormat('yyyy-MM-dd');
 
-        }else{
+          String formattedReportedDate2 = formatter2.format(_date);
+          _dateController.text = formattedReportedDate2;
+          if (_dateController.text.isNotEmpty &&
+              _searchController.text.isNotEmpty) {
+            var formatter = new DateFormat('dd-MMM-yyyy');
+            String formattedReportedDate = formatter.format(_date);
+            _bothResult.clear();
+            for (int i = 0; i < _searchResult.length; i++) {
+              NewEventsList data = _searchResult[i];
+              if (data.time
+                  .toLowerCase()
+                  .contains(formattedReportedDate.toLowerCase())) {
+                _bothResult.add(data);
+              } else {
+                print(_searchResult.length);
+              }
+            }
+          } else {
+            _searchResult.clear();
+            var formatter = new DateFormat('dd-MMM-yyyy');
+            String formattedReportedDate = formatter.format(_date);
             var formatter2 = new DateFormat('yyyy-MM-dd');
 
-        String formattedReportedDate2 = formatter2.format(_date);
-                _dateController.text = formattedReportedDate2;
-        if (_dateController.text.isNotEmpty && _searchController.text.isNotEmpty){
+            String formattedReportedDate2 = formatter2.format(_date);
 
-     var formatter = new DateFormat('dd-MMM-yyyy');
-    String formattedReportedDate = formatter.format(_date);
-       _bothResult.clear();
-      for (int i = 0; i < _searchResult.length; i++) {
-        NewEventsList data = _searchResult[i];
-        if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
-          _bothResult.add(data);
-
-        }else{
-           print(_searchResult.length);
-
-
+            _dateController.text = formattedReportedDate2;
+            for (int i = 0; i < getEventsList.length; i++) {
+              NewEventsList data = getEventsList[i];
+              if (data.time
+                  .toLowerCase()
+                  .contains(formattedReportedDate.toLowerCase())) {
+                _searchResult.add(data);
+              } else {}
+            }
+          }
         }
-
-      }
-
-
-        }else{
-          _searchResult.clear();
-   var formatter = new DateFormat('dd-MMM-yyyy');
-    String formattedReportedDate = formatter.format(_date);
-    var formatter2 = new DateFormat('yyyy-MM-dd');
-
-        String formattedReportedDate2 = formatter2.format(_date);
-
-          _dateController.text = formattedReportedDate2;
-      for (int i = 0; i < getEventsList.length; i++) {
-        NewEventsList data = getEventsList[i];
-        if (data.time.toLowerCase().contains(formattedReportedDate.toLowerCase()) ) {
-                    _searchResult.add(data);
-
-        }else{
-
-        }
-      }
-        }
-        }
-       
-
       });
     }
   }
 
-
-     
 //   Future<Null>   _selectDate(BuildContext context) async{
-         
 
 //     final DateTime picked = await showDatePicker(
 //       context: context,initialDate: _date,firstDate: new DateTime(2016),
@@ -244,8 +224,7 @@ String tokenValue = "";
 //         _date = picked;
 //         if (_searchController.text.isNotEmpty) {
 // setState(() {
-  
-  
+
 //        if (_date.toString() != null) {
 //       // String formattedReportedDate = formatter.format(_date);
 
@@ -268,7 +247,7 @@ String tokenValue = "";
 // }else{
 
 // }
-      
+
 //     }
 //     });
 //         }else{
@@ -289,21 +268,19 @@ String tokenValue = "";
 //     }
 //     });
 //         }
-        
+
 //       });
 //     }else{
-
-
 
 //     }
 //   }
   void initState() {
     super.initState();
-   
+
     checkUserExist();
-   // getToken();
+    // getToken();
     getEventsList = widget.getEventsList;
-   checkForNewSharedListsHome();
+    checkForNewSharedListsHome();
     // timer = Timer.periodic(Duration(seconds: 15), (Timer t) => checkForNewSharedLists());
     // timer = Timer.periodic(
     //     Duration(seconds: 300), (Timer t) => checkForNewSharedListsHome());
@@ -334,9 +311,9 @@ String tokenValue = "";
     //   content: new Text('Payload'),
     // ));
   }
- 
-  void checkForNewSharedListsHome() async { 
-   pr = new ProgressDialog(context);
+
+  void checkForNewSharedListsHome() async {
+    pr = new ProgressDialog(context);
     pr.style(
         message: 'Please wait...',
         borderRadius: 10.0,
@@ -350,20 +327,18 @@ String tokenValue = "";
             color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
         messageTextStyle: TextStyle(
             color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
-            pr.show();
-      final storage = new FlutterSecureStorage();
+    pr.show();
+    final storage = new FlutterSecureStorage();
 
-  tokenValue = await storage.read(key: "token");
-if  (isDateSelected == true){
-  sendTime = sendTime;
-    
-}else{
-    sendTime = await storage.read(key: "currentTime");
-
-}
+    tokenValue = await storage.read(key: "token");
+    if (isDateSelected == true) {
+      sendTime = sendTime;
+    } else {
+      sendTime = await storage.read(key: "currentTime");
+    }
 
     //var token = widget.str;
-    
+
     if (widget.idStr == "2") {
       generalEvents = generalEvents;
       severity = widget.severity;
@@ -384,14 +359,14 @@ if  (isDateSelected == true){
     //var time = nowDate.timeZoneOffset;
     var time = nowDate.timeZoneName;
 
-     var timeActual= new DateFormat("H:m:s").format(nowDate);
-      var timeSend = '"' + timeActual + '"';
+    var timeActual = new DateFormat("H:m:s").format(nowDate);
+    var timeSend = '"' + timeActual + '"';
 
     print(timeSend);
-     sendTime = '"' + sendTime + '"';
+    sendTime = '"' + sendTime + '"';
 
     //var time = widget.reportTime;
-     print(sendTime);
+    print(sendTime);
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: "Bearer $tokenValue",
       "Content-Type": "application/json"
@@ -399,7 +374,7 @@ if  (isDateSelected == true){
     // String json =
     //     '{"Datetime": $time, "TrackingEvents": $generalEvents, "Severity": $severity ,"Take":120,"Skip":0}';
 
-       String json =
+    String json =
         '{"Datetime": $sendTime,"TimeZone":"","Take":120,"Skip":0, "DeviceIdentifier":""}';
 // var severity = [1,2,3];
     final eventsResponse = await post(
@@ -413,16 +388,16 @@ if  (isDateSelected == true){
       pr.hide();
       print(eventsResponse);
       final events = newEventsListFromJson(eventsResponse.body);
-      // setState(() {
-        getEventsList = events;
-        _searchResult = events;
-       if (isDateSelected == true) {
-       showData();
-       }
-        
-      // });
+       setState(() {
+      getEventsList = events;
+      _searchResult = events;
+      if (isDateSelected == true) {
+        showData();
+      }
+
+       });
       eventCount = getEventsList.length;
-        checkUserExist();
+      checkUserExist();
     } else if (eventsResponse.statusCode == 401) {
       checkTokenExp();
       _showDialogAlert();
@@ -456,7 +431,8 @@ if  (isDateSelected == true){
       },
     );
   }
-void _showLogoutDialogAlert() {
+
+  void _showLogoutDialogAlert() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -474,25 +450,23 @@ void _showLogoutDialogAlert() {
             new FlatButton(
               child: new Text("Cancel"),
               onPressed: () {
-             Navigator.pop(context);
-
+                Navigator.pop(context);
               },
-              
             ),
-              new FlatButton(
+            new FlatButton(
               child: new Text("Close"),
               onPressed: () {
                 deleteKeys();
                 Navigator.of(context).push(new MaterialPageRoute(
                     builder: (BuildContext context) => new LoginSignUpPage()));
               },
-              
             ),
           ],
         );
       },
     );
   }
+
   void checkTokenExp() async {
     final storage = new FlutterSecureStorage();
     await storage.write(key: "token", value: "");
@@ -502,13 +476,12 @@ void _showLogoutDialogAlert() {
     final storage = new FlutterSecureStorage();
     await storage.write(key: "EventCount", value: "");
     await storage.write(key: "token", value: widget.str);
-     String value = await storage.read(key: "EventCount") ?? "" ;
+    String value = await storage.read(key: "EventCount") ?? "";
     if (value == "00" || value == "" || value == "0") {
       final storage = new FlutterSecureStorage();
       String val = value.toString();
       await storage.write(key: "EventCount", value: val);
     } else {
-     
       var eventsavedVal = int.parse(value);
 
       if (eventCount > eventsavedVal) {
@@ -590,132 +563,128 @@ void _showLogoutDialogAlert() {
     });
   }
 
- 
- void getToken() async { 
-      final storage = new FlutterSecureStorage();
+  void getToken() async {
+    final storage = new FlutterSecureStorage();
 
-  tokenValue = await storage.read(key: "token");
- }
+    tokenValue = await storage.read(key: "token");
+  }
+
   @override
   Widget build(BuildContext context) {
-  //  _validateAndGetData();
+    //  _validateAndGetData();
 //getToken();
- return new WillPopScope(
-    onWillPop: () async => false,
-    child: Scaffold(
-      backgroundColor: Colors.white,
-      //  appBar: AppBar(
-      //    automaticallyImplyLeading: false,
-      //    // bottom: TabBar(
-      //    //     indicatorColor: Colors.orange,
-      //    //       tabs: [
-      //    //         Tab(text: 'Home',),
-      //    //         Tab(text: 'Events',),
-      //    //        // Tab(text: 'Profile',),
-      //    //       ],
-      //    //     ), //backgroundColor: Color.fromRGBO(56, 66, 86, 1.0),
-      //    backgroundColor: Colors.green,
-      //    elevation: 0.0,
+    return new WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          //  appBar: AppBar(
+          //    automaticallyImplyLeading: false,
+          //    // bottom: TabBar(
+          //    //     indicatorColor: Colors.orange,
+          //    //       tabs: [
+          //    //         Tab(text: 'Home',),
+          //    //         Tab(text: 'Events',),
+          //    //        // Tab(text: 'Profile',),
+          //    //       ],
+          //    //     ), //backgroundColor: Color.fromRGBO(56, 66, 86, 1.0),
+          //    backgroundColor: Colors.green,
+          //    elevation: 0.0,
 
-      //    title: Text(
-      //      'Home',
-      //      style: TextStyle(fontSize: 24),
-      //    ),
-      //  ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _cIndex, // this will be set when a new tab is tapped
-        items: [
-          BottomNavigationBarItem(
-            icon: new Icon(
-              Icons.home,
-              color: _cIndex == 0 ? Colors.green : Colors.black,
-            ),
-            title: _cIndex == 0
-                ? new Text(
-                    'Home',
-                    style: TextStyle(color: Colors.green),
-                  )
-                : new Text(
-                    'Home',
-                    style: TextStyle(color: Colors.black),
-                  ),
-          ),
-          BottomNavigationBarItem(
-            icon: new Icon(
-              Icons.event,
-              color: _cIndex == 1 ? Colors.green : Colors.black,
-            ),
-            title: _cIndex == 1
-                ? new Text(
-                    'Events',
-                    style: TextStyle(color: Colors.green),
-                  )
-                : new Text(
-                    'Events',
-                    style: TextStyle(color: Colors.black),
-                  ),
-          ),
-          BottomNavigationBarItem(
-            icon: new Icon(
-              Icons.lock,
-              color: _cIndex == 2 ? Colors.green : Colors.black,
-            ),
-            title: _cIndex == 2
-                ? new Text(
-                    'Sign Out',
-                    style: TextStyle(color: Colors.green),
-                  )
-                : new Text(
-                    'Sign Out',
-                    style: TextStyle(color: Colors.black),
-                  ),
-          ),
+          //    title: Text(
+          //      'Home',
+          //      style: TextStyle(fontSize: 24),
+          //    ),
+          //  ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _cIndex, // this will be set when a new tab is tapped
+            items: [
+              BottomNavigationBarItem(
+                icon: new Icon(
+                  Icons.home,
+                  color: _cIndex == 0 ? Colors.green : Colors.black,
+                ),
+                title: _cIndex == 0
+                    ? new Text(
+                        'Home',
+                        style: TextStyle(color: Colors.green),
+                      )
+                    : new Text(
+                        'Home',
+                        style: TextStyle(color: Colors.black),
+                      ),
+              ),
+              BottomNavigationBarItem(
+                icon: new Icon(
+                  Icons.event,
+                  color: _cIndex == 1 ? Colors.green : Colors.black,
+                ),
+                title: _cIndex == 1
+                    ? new Text(
+                        'Events',
+                        style: TextStyle(color: Colors.green),
+                      )
+                    : new Text(
+                        'Events',
+                        style: TextStyle(color: Colors.black),
+                      ),
+              ),
+              BottomNavigationBarItem(
+                icon: new Icon(
+                  Icons.lock,
+                  color: _cIndex == 2 ? Colors.green : Colors.black,
+                ),
+                title: _cIndex == 2
+                    ? new Text(
+                        'Sign Out',
+                        style: TextStyle(color: Colors.green),
+                      )
+                    : new Text(
+                        'Sign Out',
+                        style: TextStyle(color: Colors.black),
+                      ),
+              ),
 
-          //  BottomNavigationBarItem(
-          //    icon: Icon(Icons.person),
-          //    title: Text('Profile')
-          //  )
-        ],
-        onTap: (index) {
-          setState(() {
-            if (index == 2) {
-              
+              //  BottomNavigationBarItem(
+              //    icon: Icon(Icons.person),
+              //    title: Text('Profile')
+              //  )
+            ],
+            onTap: (index) {
               setState(() {
-                _showLogoutDialogAlert();
-              //   deleteKeys();
-              //   Navigator.of(context).push(new MaterialPageRoute(
-              //       builder: (BuildContext context) => new LoginSignUpPage()));
+                if (index == 2) {
+                  setState(() {
+                    _showLogoutDialogAlert();
+                    //   deleteKeys();
+                    //   Navigator.of(context).push(new MaterialPageRoute(
+                    //       builder: (BuildContext context) => new LoginSignUpPage()));
+                  });
+                }
               });
-            }
-          });
-          _incrementTab(index);
-        },
-      ),
-      //    bottomNavigationBar: BottomAppBar(
-      //   child: new Row(
-      //     mainAxisSize: MainAxisSize.max,
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: <Widget>[
-      //       IconButton(
-      //         icon: Icon(Icons.menu),
-      //         onPressed: () {},
-      //       ),
-      //       IconButton(
-      //         icon: Icon(Icons.search),
-      //         onPressed: () {},
-      //       )
-      //     ],
-      //   ),
-      // ),
-      body: SafeArea(
-        child: Container(child: showData()),
+              _incrementTab(index);
+            },
+          ),
+          //    bottomNavigationBar: BottomAppBar(
+          //   child: new Row(
+          //     mainAxisSize: MainAxisSize.max,
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: <Widget>[
+          //       IconButton(
+          //         icon: Icon(Icons.menu),
+          //         onPressed: () {},
+          //       ),
+          //       IconButton(
+          //         icon: Icon(Icons.search),
+          //         onPressed: () {},
+          //       )
+          //     ],
+          //   ),
+          // ),
+          body: SafeArea(
+            child: Container(child: showData()),
 
-        // child: Container(child:  showList()),
-      ),
-    )
- );
-
-
+            // child: Container(child:  showList()),
+          ),
+        ));
   }
 
   void deleteKeys() async {
@@ -729,7 +698,7 @@ void _showLogoutDialogAlert() {
 //     if (tokenValue == ""){
 // getToken();
 //     }else{
- if (_cIndex == 0) {
+    if (_cIndex == 0) {
       return Container(
         child: FleetlyWebview(htmlText: widget.str),
         height: MediaQuery.of(context).size.height,
@@ -743,7 +712,11 @@ void _showLogoutDialogAlert() {
               padding: const EdgeInsets.only(left: 5, top: 20, bottom: 20),
               child: Row(
                 children: <Widget>[
-                   Container(child: _dateSearchBar(), width: 140,height: 40,),
+                  Container(
+                    child: _dateSearchBar(),
+                    width: 140,
+                    height: 40,
+                  ),
 
                   GestureDetector(
                     child: Padding(
@@ -763,8 +736,8 @@ void _showLogoutDialogAlert() {
                       ),
                     ),
                     onTap: () {
-                    //  pr.show();
-                     _selectDate(context);
+                      //  pr.show();
+                      _selectDate(context);
 
                       // Navigator.of(context).push(new MaterialPageRoute(
                       //     builder: (BuildContext context) =>
@@ -775,7 +748,11 @@ void _showLogoutDialogAlert() {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8),
-                    child: Container(child: _searchBar(), width: 150,height: 40,),
+                    child: Container(
+                      child: _searchBar(),
+                      width: 150,
+                      height: 40,
+                    ),
                   ),
 
                   // GestureDetector(
@@ -807,12 +784,9 @@ void _showLogoutDialogAlert() {
               ),
             ),
             searchNotEmpty(),
-           
-           
           ],
         );
       } else {
-
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -820,9 +794,12 @@ void _showLogoutDialogAlert() {
               padding: const EdgeInsets.only(left: 5, top: 20, bottom: 20),
               child: Row(
                 children: <Widget>[
-                 Container(child: _dateSearchBar(), width: 140,height: 40,),
+                  Container(
+                    child: _dateSearchBar(),
+                    width: 140,
+                    height: 40,
+                  ),
 
-                  
                   GestureDetector(
                     child: Padding(
                       padding: const EdgeInsets.only(left: 5, top: 1),
@@ -842,7 +819,7 @@ void _showLogoutDialogAlert() {
                     ),
                     onTap: () {
                       pr.show();
-                    _selectDate(context);
+                      _selectDate(context);
 
                       // Navigator.of(context).push(new MaterialPageRoute(
                       //     builder: (BuildContext context) =>
@@ -851,10 +828,14 @@ void _showLogoutDialogAlert() {
                       //             reportTime: widget.reportTime)));
                     },
                   ),
-               Padding(
-                 padding: const EdgeInsets.only(left: 8),
-                 child: Container(child: _searchBar(), width: 150, height: 40,),
-               ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Container(
+                      child: _searchBar(),
+                      width: 150,
+                      height: 40,
+                    ),
+                  ),
 
                   // GestureDetector(
                   //   child: Padding(
@@ -874,7 +855,7 @@ void _showLogoutDialogAlert() {
                   //     ),
                   //   ),
                   //   onTap: () {
-                      
+
                   //     //  Navigator.of(context).push(new MaterialPageRoute(
                   //     //     builder: (BuildContext context) =>
                   //     //         new BasicDateField()));
@@ -888,18 +869,16 @@ void _showLogoutDialogAlert() {
                 ],
               ),
             ),
-           
-         Padding(
-           padding: const EdgeInsets.only(top: 150,left: 8,right: 8),
-           child: Container(
-                    child: Center(
-                      child: Text(
-              'There is no events for selected date',
-              style: TextStyle(color: Colors.red, fontSize: 20),
-            ),
-                    )),
-         )
-       
+            Padding(
+              padding: const EdgeInsets.only(top: 150, left: 8, right: 8),
+              child: Container(
+                  child: Center(
+                child: Text(
+                  'There is no events for selected date',
+                  style: TextStyle(color: Colors.red, fontSize: 20),
+                ),
+              )),
+            )
           ],
         );
         // return Center(
@@ -924,85 +903,84 @@ void _showLogoutDialogAlert() {
 
     }
 //getEventsList = widget.getEventsList;
-   
-   // }
+
+    // }
   }
 
-  Widget searchNotEmpty(){
+  Widget searchNotEmpty() {
     if (_searchController.text.isNotEmpty && _dateController.text.isNotEmpty) {
       return Container(
-              child: Container(
-                height: MediaQuery.of(context).size.height -220,
-                child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _bothResult.length,
-                        itemBuilder: (context, index) {
-                          return _listItem(context, index, _bothResult);
-                        },
-                      )
-                    
-              ),
-            );
-
-    }else{
- return Container(
-              child: Container(
-                height: MediaQuery.of(context).size.height -220,
-                child: _searchController.text.isNotEmpty || _dateController.text.isNotEmpty
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _searchResult.length,
-                        itemBuilder: (context, index) {
-                          return _listItem(context, index, _searchResult);
-                        },
-                      )
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: getEventsList.length,
-                        itemBuilder: (context, index) {
-                          return _listItem(
-                              context, index, getEventsList);
-                        },
-                      ),
-              ),
-            );
+        child: Container(
+            height: MediaQuery.of(context).size.height - 220,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: _bothResult.length,
+              itemBuilder: (context, index) {
+                return _listItem(context, index, _bothResult);
+              },
+            )),
+      );
+    } else {
+      return Container(
+        child: Container(
+          height: MediaQuery.of(context).size.height - 220,
+          child: _searchController.text.isNotEmpty ||
+                  _dateController.text.isNotEmpty
+              ? ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _searchResult.length,
+                  itemBuilder: (context, index) {
+                    return _listItem(context, index, _searchResult);
+                  },
+                )
+              : ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: getEventsList.length,
+                  itemBuilder: (context, index) {
+                    return _listItem(context, index, getEventsList);
+                  },
+                ),
+        ),
+      );
     }
-    
-
   }
-  void onSearchTextChanged(String text){
-setState(() {
-    if (text != null && _dateController.text.isNotEmpty||_dateController.text != "" ){
-print(_dateController.text);
-         if (_date.toString() != null && text != null) {
-         var formatter = new DateFormat('dd-MMM-yyyy');
-    String formattedReportedDate = formatter.format(_date);
-_bothResult.clear();
 
-      for (int i = 0; i < _searchResult.length; i++) {
-        NewEventsList data = _searchResult[i];
-        if (data.type.toLowerCase().contains(text.toLowerCase()) ||data.vrn.toLowerCase().contains(text.toLowerCase()) || data.driver.toLowerCase().contains(text.toLowerCase()) ) {
-        _bothResult.add(data);
-        }else{
+  void onSearchTextChanged(String text) {
+    setState(() {
+      if (text != null && _dateController.text.isNotEmpty ||
+          _dateController.text != "") {
+        print(_dateController.text);
+        if (_date.toString() != null && text != null) {
+          var formatter = new DateFormat('dd-MMM-yyyy');
+          String formattedReportedDate = formatter.format(_date);
+          _bothResult.clear();
 
+          for (int i = 0; i < _searchResult.length; i++) {
+            NewEventsList data = _searchResult[i];
+            if (data.type.toLowerCase().contains(text.toLowerCase()) ||
+                data.vrn.toLowerCase().contains(text.toLowerCase()) ||
+                data.driver.toLowerCase().contains(text.toLowerCase())) {
+              _bothResult.add(data);
+            } else {}
+          }
         }
-      }
-    } 
-      }else if (text != null || _dateController.text.isEmpty || _dateController.text == ""){
-          _searchResult.clear();
+      } else if (text != null ||
+          _dateController.text.isEmpty ||
+          _dateController.text == "") {
+        _searchResult.clear();
 
-       if  (text != null){
-      for (int i = 0; i < getEventsList.length; i++) {
-        NewEventsList data = getEventsList[i];
-        if (data.type.toLowerCase().contains(text.toLowerCase()) ||data.vrn.toLowerCase().contains(text.toLowerCase()) || data.driver.toLowerCase().contains(text.toLowerCase())) {
-          _searchResult.add(data);
+        if (text != null) {
+          for (int i = 0; i < getEventsList.length; i++) {
+            NewEventsList data = getEventsList[i];
+            if (data.type.toLowerCase().contains(text.toLowerCase()) ||
+                data.vrn.toLowerCase().contains(text.toLowerCase()) ||
+                data.driver.toLowerCase().contains(text.toLowerCase())) {
+              _searchResult.add(data);
+            }
+          }
         }
-      }
-      }
-      }else{
-
-      }
-});
+      } else {}
+    });
 
 //     setState(() {
 //       print(_date);
@@ -1021,7 +999,7 @@ _bothResult.clear();
 
 //         }
 //       }
-//     } 
+//     }
 //       }
 //       else if (text != null || _dateController.text.isNotEmpty || _dateController.text != "") {
 //           _searchResult.clear();
@@ -1046,15 +1024,6 @@ _bothResult.clear();
 //     }
 //     });
 
-
-
-
-
-
-
-
-
-   
     // _searchResult.clear();
     // if (text.isEmpty) {
     //   setState(() {});
@@ -1067,7 +1036,7 @@ _bothResult.clear();
     // });
 
     // setState(() {});
-}
+  }
 
 //   onSearchTextChanged(String text) async {
 //     _searchResult.clear();
@@ -1126,8 +1095,7 @@ _bothResult.clear();
 // //     });
 
 //   }
-Widget _dateSearchBar() {
-
+  Widget _dateSearchBar() {
     return Container(
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1151,7 +1119,6 @@ Widget _dateSearchBar() {
                             new EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 10.0),
                         border: InputBorder.none,
                         hintText: 'Search date',
-                        
                         hintStyle: TextStyle(
                             fontWeight: FontWeight.w100,
                             fontSize: 19,
@@ -1183,7 +1150,6 @@ Widget _dateSearchBar() {
           new SizedBox(
             width: 10.0,
           ),
-       
         ],
       ),
       decoration: BoxDecoration(
@@ -1196,6 +1162,7 @@ Widget _dateSearchBar() {
           borderRadius: BorderRadius.all(Radius.elliptical(15, 15))),
     );
   }
+
   Widget _searchBar() {
     return Container(
       child: new Row(
@@ -1338,258 +1305,173 @@ Widget _dateSearchBar() {
   }
 
   Widget _listItem(BuildContext context, int index, data) {
- var assetsImage = new AssetImage("assets/car.png");
- Color color;
-  //<- Creates an object that fetches an image.
-    if (data[index].type == "AccOff"){
-     if (data[index].severity == 1){
-assetsImage = new AssetImage("assets/AccOff1.jpg"); 
-color = Colors.orange;
-
-      }else if (data[index].severity == 2){
-assetsImage = new AssetImage("assets/AccOff2.jpg"); 
-color = Colors.blue;
-
-      }else{
-assetsImage = new AssetImage("assets/AccOff3.jpg"); 
-color = Colors.red;
-
+    var assetsImage = new AssetImage("assets/car.png");
+    Color color;
+    //<- Creates an object that fetches an image.
+    if (data[index].type == "AccOff") {
+      if (data[index].severity == 1) {
+        assetsImage = new AssetImage("assets/AccOff1.jpg");
+        color = Colors.orange;
+      } else if (data[index].severity == 2) {
+        assetsImage = new AssetImage("assets/AccOff2.jpg");
+        color = Colors.blue;
+      } else {
+        assetsImage = new AssetImage("assets/AccOff3.jpg");
+        color = Colors.red;
       }
-    }else if (data[index].type == "AccOn"){
-    if (data[index].severity == 1){
-assetsImage = new AssetImage("assets/AccOn1.jpg"); 
-color = Colors.orange;
-
-      }else if (data[index].severity == 2){
-assetsImage = new AssetImage("assets/AccOn2.jpg"); 
-color = Colors.blue;
-
-      }else{
-assetsImage = new AssetImage("assets/AccOn3.jpg"); 
-color = Colors.red;
-
+    } else if (data[index].type == "AccOn") {
+      if (data[index].severity == 1) {
+        assetsImage = new AssetImage("assets/AccOn1.jpg");
+        color = Colors.orange;
+      } else if (data[index].severity == 2) {
+        assetsImage = new AssetImage("assets/AccOn2.jpg");
+        color = Colors.blue;
+      } else {
+        assetsImage = new AssetImage("assets/AccOn3.jpg");
+        color = Colors.red;
       }
-    }else if (data[index].type == "Emergency"){
-          if (data[index].severity == 1){
-assetsImage = new AssetImage("assets/Emergency1.jpg"); 
-color = Colors.orange;
-
-      }else if (data[index].severity == 2){
-assetsImage = new AssetImage("assets/Emergency2.jpg"); 
-color = Colors.blue;
-
-      }else{
-assetsImage = new AssetImage("assets/Emergency3.jpg"); 
-color = Colors.red;
-
+    } else if (data[index].type == "Emergency") {
+      if (data[index].severity == 1) {
+        assetsImage = new AssetImage("assets/Emergency1.jpg");
+        color = Colors.orange;
+      } else if (data[index].severity == 2) {
+        assetsImage = new AssetImage("assets/Emergency2.jpg");
+        color = Colors.blue;
+      } else {
+        assetsImage = new AssetImage("assets/Emergency3.jpg");
+        color = Colors.red;
       }
-      
-    }else if (data[index].type == "EnterArea"){
- 
-assetsImage = new AssetImage("assets/EnterArea3.jpg"); 
+    } else if (data[index].type == "EnterArea") {
+      assetsImage = new AssetImage("assets/EnterArea3.jpg");
 
       color = Colors.red;
-
-      
-    }else if (data[index].type == "ExitArea"){
-
-assetsImage = new AssetImage("assets/ExitArea3.jpg"); 
-color = Colors.red;
-
-    
-      
-    }else if (data[index].type == "GShock"){
-          if (data[index].severity == 1){
-assetsImage = new AssetImage("assets/GShock1.jpg"); 
-color = Colors.orange;
-
-
-      }else if (data[index].severity == 2){
-assetsImage = new AssetImage("assets/GShock2.jpg"); 
-color = Colors.blue;
-
-
-      }else{
-assetsImage = new AssetImage("assets/GShock3.jpg"); 
-color = Colors.red;
-
-
+    } else if (data[index].type == "ExitArea") {
+      assetsImage = new AssetImage("assets/ExitArea3.jpg");
+      color = Colors.red;
+    } else if (data[index].type == "GShock") {
+      if (data[index].severity == 1) {
+        assetsImage = new AssetImage("assets/GShock1.jpg");
+        color = Colors.orange;
+      } else if (data[index].severity == 2) {
+        assetsImage = new AssetImage("assets/GShock2.jpg");
+        color = Colors.blue;
+      } else {
+        assetsImage = new AssetImage("assets/GShock3.jpg");
+        color = Colors.red;
       }
-      
-    }else if (data[index].type == "PowerCut"){
-
-assetsImage = new AssetImage("assets/PowerCut.jpg"); 
-color = Colors.black;
-
-      
-      
-    }else if (data[index].type == "Snapshot"){
-          if (data[index].severity == 1){
-assetsImage = new AssetImage("assets/Snapshot1.jpg"); 
-color = Colors.orange;
-
-
-      }else if (data[index].severity == 2){
-assetsImage = new AssetImage("assets/Snapshot2.jpg"); 
-color = Colors.blue;
-
-
-      }else{
-assetsImage = new AssetImage("assets/Snapshot3.jpg"); 
-color = Colors.red;
-
-
+    } else if (data[index].type == "PowerCut") {
+      assetsImage = new AssetImage("assets/PowerCut.jpg");
+      color = Colors.black;
+    } else if (data[index].type == "Snapshot") {
+      if (data[index].severity == 1) {
+        assetsImage = new AssetImage("assets/Snapshot1.jpg");
+        color = Colors.orange;
+      } else if (data[index].severity == 2) {
+        assetsImage = new AssetImage("assets/Snapshot2.jpg");
+        color = Colors.blue;
+      } else {
+        assetsImage = new AssetImage("assets/Snapshot3.jpg");
+        color = Colors.red;
       }
-      
-    }else if (data[index].type == "SoundAaarm"){
- 
-assetsImage = new AssetImage("assets/SoundAaarm.jpg"); 
-color = Colors.black;
- 
-      
-    }else if (data[index].type == "Speed"){
-          if (data[index].severity == 1){
-assetsImage = new AssetImage("assets/speed1.jpg"); 
-color = Colors.orange;
-
-
-      }else if (data[index].severity == 2){
-assetsImage = new AssetImage("assets/Speed2.jpg"); 
-color = Colors.blue;
-
-
-      }else{
-assetsImage = new AssetImage("assets/speed3.jpg"); 
-color = Colors.red;
-
-
+    } else if (data[index].type == "SoundAaarm") {
+      assetsImage = new AssetImage("assets/SoundAaarm.jpg");
+      color = Colors.black;
+    } else if (data[index].type == "Speed") {
+      if (data[index].severity == 1) {
+        assetsImage = new AssetImage("assets/speed1.jpg");
+        color = Colors.orange;
+      } else if (data[index].severity == 2) {
+        assetsImage = new AssetImage("assets/Speed2.jpg");
+        color = Colors.blue;
+      } else {
+        assetsImage = new AssetImage("assets/speed3.jpg");
+        color = Colors.red;
       }
-      
-    }else if (data[index].type == "SuddenAcceleration"){
-          if (data[index].severity == 1){
-assetsImage = new AssetImage("assets/SuddenAcceleration1.jpg"); 
-color = Colors.orange;
-
-
-      }else if (data[index].severity == 2){
-assetsImage = new AssetImage("assets/SuddenAcceleration2.jpg"); 
-color = Colors.blue;
-
-
-      }else{
-assetsImage = new AssetImage("assets/SuddenAcceleration3.jpg"); 
-color = Colors.red;
-
-
+    } else if (data[index].type == "SuddenAcceleration") {
+      if (data[index].severity == 1) {
+        assetsImage = new AssetImage("assets/SuddenAcceleration1.jpg");
+        color = Colors.orange;
+      } else if (data[index].severity == 2) {
+        assetsImage = new AssetImage("assets/SuddenAcceleration2.jpg");
+        color = Colors.blue;
+      } else {
+        assetsImage = new AssetImage("assets/SuddenAcceleration3.jpg");
+        color = Colors.red;
       }
-      
-    }else if (data[index].type == "SuddenBraking"){
-          if (data[index].severity == 1){
-assetsImage = new AssetImage("assets/SuddenBraking1.jpg"); 
-color = Colors.orange;
-
-
-      }else if (data[index].severity == 2){
-assetsImage = new AssetImage("assets/SuddenBraking2.jpg"); 
-color = Colors.blue;
-
-
-      }else{
-assetsImage = new AssetImage("assets/SuddenBraking3.jpg"); 
-color = Colors.red;
-
-
+    } else if (data[index].type == "SuddenBraking") {
+      if (data[index].severity == 1) {
+        assetsImage = new AssetImage("assets/SuddenBraking1.jpg");
+        color = Colors.orange;
+      } else if (data[index].severity == 2) {
+        assetsImage = new AssetImage("assets/SuddenBraking2.jpg");
+        color = Colors.blue;
+      } else {
+        assetsImage = new AssetImage("assets/SuddenBraking3.jpg");
+        color = Colors.red;
       }
-      
-    }else if (data[index].type == "SuddenTurn"){
-          if (data[index].severity == 1){
-assetsImage = new AssetImage("assets/SuddenTurn1.jpg"); 
-color = Colors.orange;
-
-
-      }else if (data[index].severity == 2){
-assetsImage = new AssetImage("assets/SuddenTurn2.jpg"); 
-color = Colors.blue;
-
-
-      }else{
-assetsImage = new AssetImage("assets/SuddenTurn3.jpg"); 
-color = Colors.red;
-
-
+    } else if (data[index].type == "SuddenTurn") {
+      if (data[index].severity == 1) {
+        assetsImage = new AssetImage("assets/SuddenTurn1.jpg");
+        color = Colors.orange;
+      } else if (data[index].severity == 2) {
+        assetsImage = new AssetImage("assets/SuddenTurn2.jpg");
+        color = Colors.blue;
+      } else {
+        assetsImage = new AssetImage("assets/SuddenTurn3.jpg");
+        color = Colors.red;
       }
-      
-    }else if (data[index].type == "System"){
-
-assetsImage = new AssetImage("assets/System.jpg"); 
-color = Colors.red;
-
-
-      
-      
-    }else if (data[index].type == "Unknown"){
-
-assetsImage = new AssetImage("assets/Unknown.jpg"); 
+    } else if (data[index].type == "System") {
+      assetsImage = new AssetImage("assets/System.jpg");
+      color = Colors.red;
+    } else if (data[index].type == "Unknown") {
+      assetsImage = new AssetImage("assets/Unknown.jpg");
 
       color = Colors.black;
-
-      
-    }else if (data[index].type == "UserRequest"){
-          if (data[index].severity == 1){
-assetsImage = new AssetImage("assets/UserRequest1.jpg"); 
-color = Colors.orange;
-
-
-      }else if (data[index].severity == 2){
-assetsImage = new AssetImage("assets/UserRequest2.jpg"); 
-color = Colors.blue;
-
-
-      }else{
-assetsImage = new AssetImage("assets/UserRequest3.jpg"); 
-color = Colors.red;
-
-
+    } else if (data[index].type == "UserRequest") {
+      if (data[index].severity == 1) {
+        assetsImage = new AssetImage("assets/UserRequest1.jpg");
+        color = Colors.orange;
+      } else if (data[index].severity == 2) {
+        assetsImage = new AssetImage("assets/UserRequest2.jpg");
+        color = Colors.blue;
+      } else {
+        assetsImage = new AssetImage("assets/UserRequest3.jpg");
+        color = Colors.red;
       }
-      
-    }else if (data[index].type == "Vibration"){
-          if (data[index].severity == 1){
-assetsImage = new AssetImage("assets/Vibration1.jpg"); 
-
-      }else if (data[index].severity == 2){
-assetsImage = new AssetImage("assets/Vibration2.jpg"); 
-
-      }else{
-assetsImage = new AssetImage("assets/Vibration2.jpg"); 
-
+    } else if (data[index].type == "Vibration") {
+      if (data[index].severity == 1) {
+        assetsImage = new AssetImage("assets/Vibration1.jpg");
+      } else if (data[index].severity == 2) {
+        assetsImage = new AssetImage("assets/Vibration2.jpg");
+      } else {
+        assetsImage = new AssetImage("assets/Vibration2.jpg");
       }
-      
     }
-  List images = data[index].images;
-  print(images.length);
-  if (images.length > 0){
-  imgCount = 1;
-  }else{
-imgCount = 0;
-  }
-  // if (data[index].type.toString() == "GShock"){
-  //   color = Colors.orange;
+    List images = data[index].images;
+    print(images.length);
+    if (images.length > 0) {
+      imgCount = 1;
+    } else {
+      imgCount = 0;
+    }
+    // if (data[index].type.toString() == "GShock"){
+    //   color = Colors.orange;
 
-  // }else if (data[index].type.toString() == ""){
+    // }else if (data[index].type.toString() == ""){
 
-  // }else if (data[index].type.toString() == ""){
-    
-  // }else if (data[index].type.toString() == ""){
-    
-  // }else if (data[index].type.toString() == ""){
-    
-  // }
+    // }else if (data[index].type.toString() == ""){
+
+    // }else if (data[index].type.toString() == ""){
+
+    // }else if (data[index].type.toString() == ""){
+
+    // }
     String dateNow = data[index].time.toString();
     print(dateNow);
     dateNow.substring(0, 10);
     print(dateNow.substring(13, 23));
     var date = dateNow.substring(13, 23);
-   
+
     return Container(
       width: MediaQuery.of(context).size.width,
       // height: 120,
@@ -1605,19 +1487,17 @@ imgCount = 0;
                 // child: Image.network(responseData.image),
                 //child: Center(
                 child: new Container(
-                    width: 38.0,
-                    height: 38.0,
+                    width: 33.0,
+                    height: 33.0,
                     decoration: new BoxDecoration(
-                       // borderRadius: new BorderRadius.circular(20.0),
+                        // borderRadius: new BorderRadius.circular(20.0),
                         shape: BoxShape.rectangle,
                         color: Colors.red,
                         image: new DecorationImage(
                           fit: BoxFit.fill,
                           //image: new NetworkImage( "https://foresite.com/wp-content/uploads/2018/02/case-study.jpg")
                           image: assetsImage,
-                        )
-                        )
-                        ),
+                        ))),
               ),
               title: Column(
                 children: <Widget>[
@@ -1691,7 +1571,9 @@ imgCount = 0;
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left:4,),
+                            padding: const EdgeInsets.only(
+                              left: 4,
+                            ),
                             child: Container(
                               width: 70,
                               child: new Text(date,
@@ -1707,27 +1589,37 @@ imgCount = 0;
                                       wordSpacing: 1)),
                             ),
                           ),
-imgCount == 1 ? Container(
-  width:90,
-  child:   Padding(
-          padding: EdgeInsets.fromLTRB(2.0, 0.0, 0.0, 0.0),
-          child: SizedBox(
-            height: 25.0,
-            child: new RaisedButton(
-              elevation: 5.0,
-              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-              color: Colors.green,
-                   child:  new Text('Images',
-                      style: new TextStyle(fontSize: 15.0, color: Colors.white)),
-           
-              onPressed: (){
-  Navigator.of(context).push(new MaterialPageRoute(
-                       builder: (BuildContext context) => new ImagesPage(images:images)));
-
-              },
-            ),
-          )),
-): Container(),
+                          imgCount == 1
+                              ? Container(
+                                  width: 90,
+                                  child: Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          2.0, 0.0, 0.0, 0.0),
+                                      child: SizedBox(
+                                        height: 25.0,
+                                        child: new RaisedButton(
+                                          elevation: 5.0,
+                                          shape: new RoundedRectangleBorder(
+                                              borderRadius:
+                                                  new BorderRadius.circular(
+                                                      30.0)),
+                                          color: Colors.green,
+                                          child: new Text('Images',
+                                              style: new TextStyle(
+                                                  fontSize: 15.0,
+                                                  color: Colors.white)),
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                                new MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        new ImagesPage(
+                                                            images: images)));
+                                          },
+                                        ),
+                                      )),
+                                )
+                              : Container(),
                           // Padding(
                           //   padding: const EdgeInsets.only(left: 8),
                           //   child: new Text('0Miles',
@@ -1745,6 +1637,25 @@ imgCount == 1 ? Container(
                           //  ),
                         ],
                       ),
+                      Row(
+                        children: <Widget>[
+                           Padding(
+                            padding: const EdgeInsets.only(left: 2),
+                            child: Container(
+                              width: 85,
+                              child: new Text(data[index].driver.toString(),
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: new TextStyle(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w300,
+                                      //  color: CommonColors.blueShadeWhite,
+                                      letterSpacing: 0.2,
+                                      wordSpacing: 1)),
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),

@@ -207,7 +207,7 @@ Widget _showLogo() {
   }
   Widget _verifyButton() {
     return Padding(
-      padding: const EdgeInsets.only(left: 8,right: 8, top: 20),
+      padding: const EdgeInsets.only(left: 20,right: 20, top: 20),
       child: Container(
         height: 50.0,
         width:MediaQuery.of(context).size.width,
@@ -313,26 +313,38 @@ void _showDialogAlert() {
    controller: _newPasswordTextController,
     obscureText: true,
     autofocus: false,
-    style: TextStyle(fontSize: 16.0, color: Colors.black),
-    decoration: InputDecoration(
-      filled: true,
-      fillColor: CommonColors.greyColor,
-      hintText: 'Enter new password',
-             prefixIcon: new Icon(
+    style: TextStyle(fontSize: 16.0, color: Colors.white),
+     decoration: new InputDecoration(
+            hintText: 'Enter new password',
+            hintStyle: TextStyle(color: Colors.white60),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+            prefixIcon: new Icon(
               Icons.lock,
               color: Colors.green,
+            )
+
             ),
-      contentPadding:
-          const EdgeInsets.only(left: 14.0, bottom: 18.0, top: 15.0),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
-        borderRadius: BorderRadius.circular(10),
-      ),
-    ),
+    // decoration: InputDecoration(
+    //   filled: true,
+    //   fillColor: CommonColors.greyColor,
+    //   hintText: 'Enter new password',
+    //          prefixIcon: new Icon(
+    //           Icons.lock,
+    //           color: Colors.green,
+    //         ),
+    //   contentPadding:
+    //       const EdgeInsets.only(left: 14.0, bottom: 18.0, top: 15.0),
+    //   focusedBorder: OutlineInputBorder(
+    //     borderSide: BorderSide(color: Colors.white),
+    //     borderRadius: BorderRadius.circular(10),
+    //   ),
+    //   enabledBorder: UnderlineInputBorder(
+    //     borderSide: BorderSide(color: Colors.white),
+    //     borderRadius: BorderRadius.circular(10),
+    //   ),
+    // ),
     //  validator: (value){
     //    var str = validatePassword(value);
     //    if (str == "Please enter password"){
@@ -372,26 +384,38 @@ void _showDialogAlert() {
    controller: _confirmPassordTextController,
     obscureText: true,
     autofocus: false,
-    style: TextStyle(fontSize: 16.0, color: Colors.black),
-    decoration: InputDecoration(
-      filled: true,
-      fillColor: CommonColors.greyColor,
-      hintText: 'Confirm password',
-             prefixIcon: new Icon(
+    style: TextStyle(fontSize: 16.0, color: Colors.white),
+     decoration: new InputDecoration(
+            hintText: 'Confirm password',
+            hintStyle: TextStyle(color: Colors.white60),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+            prefixIcon: new Icon(
               Icons.lock,
               color: Colors.green,
+            )
+
             ),
-      contentPadding:
-          const EdgeInsets.only(left: 14.0, bottom: 18.0, top: 15.0),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
-        borderRadius: BorderRadius.circular(10),
-      ),
-    ),
+    // decoration: InputDecoration(
+    //   filled: true,
+    //   fillColor: CommonColors.greyColor,
+    //   hintText: 'Confirm password',
+    //          prefixIcon: new Icon(
+    //           Icons.lock,
+    //           color: Colors.green,
+    //         ),
+    //   contentPadding:
+    //       const EdgeInsets.only(left: 14.0, bottom: 18.0, top: 15.0),
+    //   focusedBorder: OutlineInputBorder(
+    //     borderSide: BorderSide(color: Colors.white),
+    //     borderRadius: BorderRadius.circular(10),
+    //   ),
+    //   enabledBorder: UnderlineInputBorder(
+    //     borderSide: BorderSide(color: Colors.white),
+    //     borderRadius: BorderRadius.circular(10),
+    //   ),
+    // ),
      
       ),
     );
